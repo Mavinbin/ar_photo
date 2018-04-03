@@ -63,3 +63,18 @@ a {
 .video {
     width: 100%;
 }
+
+.log {
+    position: fixed;
+    right: 10px;
+    top: 10px;
+    padding: 10px;
+    width: 40%;
+    height: 100px;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+}
+
+.log span {
+    display: block;
+}

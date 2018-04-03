@@ -4,6 +4,16 @@
 (function () {
     var ARPhoto = {}
 
+    ARPhoto.log = function (msg) {
+        var oLog = document.querySelector('#log'),
+            oSpan = document.createElement('span'),
+            oMsg = document.createTextNode(msg)
+
+        oSpan.appendChild(oMsg)
+        oLog.appendChild(oSpan)
+        console.log(msg)
+    }
+
     // 遍历设备的所有音频和摄像头设备
     ARPhoto.enumerateDevices = function () {
         var constraints = {
@@ -21,9 +31,9 @@
                         constraints.video.deviceId = device.deviceId
                     }
 
-                    // var str = 'device: { deviceId:' + device.deviceId + ', kind:' + device.kind + ', label:' + device.label + '}'
+                    var str = 'device: { deviceId:' + device.deviceId + ', kind:' + device.kind + ', label:' + device.label + '}'
 
-                    // alert(str)
+                    ARPhoto.log(str)
                 })
 
                 ARPhoto.getUserMedia(constraints)
