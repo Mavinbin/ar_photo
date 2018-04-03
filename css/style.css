@@ -88,10 +88,6 @@ a {
     z-index: 1;
 }
 
-.video-wrap {
-    z-index: -1;
-}
-
 .video-wrap .video {
     position: absolute;
     left: 50%;
