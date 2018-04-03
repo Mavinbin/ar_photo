@@ -69,6 +69,14 @@ a {
     overflow: hidden;
 }
 
+.video {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+}
+
 .log {
     position: fixed;
     right: 10px;
