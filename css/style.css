@@ -96,7 +96,7 @@ a {
     -webkit-transform: translate(-50%, -50%);
 }
 
-.trace-wrap .btn-shutter {
+.trace-wrap .btn, {
     position: absolute;
     bottom: 20px;
     left: 50%;
@@ -113,8 +113,12 @@ a {
     box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.2);
 }
 
-.trace-wrap .btn-shutter:active {
+.trace-wrap .btn:active {
     box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.2), inset 0 0 5px 5px #1e7cd4;
+}
+
+.trace-wrap .btn-redo {
+    display: none;
 }
 
 .log {

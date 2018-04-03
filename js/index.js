@@ -17,10 +17,21 @@
 
     // dom操作
     ARPhoto.domOperation = function() {
-        var oBtnShuffer = document.getElementById('btnShutter')
+        var oBtnShuffer = document.getElementById('btnShutter'),
+            oBtnRedo = document.getElementById('btnRedo')
+
+        // 点击拍照
         oBtnShuffer.addEventListener('click', function () {
-            alert(1)
             clearInterval(ARPhoto.global.timer1)
+            this.style.display = 'none'
+            oBtnRedo.style.display = 'block'
+        })
+
+        // 点击重新拍照
+        oBtnRedo.addEventListener('click', function () {
+            ARPhoto.drawVideoOnCanvas()
+            this.style.display = 'none'
+            oBtnShuffer.style.display = 'block'
         })
     }
 
