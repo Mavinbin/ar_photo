@@ -18,7 +18,9 @@
     ARPhoto.enumerateDevices = function () {
         var constraints = {
             audio: false,
-            video: true
+            video: {
+                facingMode: 'user'
+            }
         }
         if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
             navigator.mediaDevices.enumerateDevices().then(function (devices) {
