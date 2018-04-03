@@ -11,8 +11,8 @@
         oVideo: document.getElementById('video'),
         oTrace: document.getElementById('trace'),
         traceCtx: document.getElementById('trace').getContext('2d'),
-        docW: document.documentElement.clientWidth,
-        docH: document.documentElement.clientHeight
+        canvasW: document.documentElement.clientWidth,
+        canvasH: document.documentElement.clientHeight
     }
 
     // dom操作
@@ -122,14 +122,17 @@
     ARPhoto.initCanvas = function (w, h) {
         this.global.oTrace.setAttribute('width', w)
         this.global.oTrace.setAttribute('height', h)
-        ARPhoto.drawVideoOnCanvas(w, h)
+        this.global.canvasW = w
+        this.global.canvasH = h
+
+        ARPhoto.drawVideoOnCanvas()
     }
 
     // 将视频实时渲染在canvas上
-    ARPhoto.drawVideoOnCanvas = function (w, h) {
+    ARPhoto.drawVideoOnCanvas = function () {
         var _this = this
         _this.global.timer1 = setInterval(function () {
-            _this.global.traceCtx.drawImage(_this.global.oVideo, 0, 0, w, h)
+            _this.global.traceCtx.drawImage(_this.global.oVideo, 0, 0, _this.global.canvasW, _this.global.canvasH)
         }, 60)
     }
 
