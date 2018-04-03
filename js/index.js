@@ -109,7 +109,7 @@
     ARPhoto.drawVideoOnCanvas = function () {
         var _this = this
         _this.global.timer1 = setInterval(function () {
-            _this.global.traceCtx.drawImage(_this.global.oVideo, 0, 0, _this.global.docW / 2, _this.global.docH / 2)
+            _this.global.traceCtx.drawImage(_this.global.oVideo, 0, 0, _this.global.docW, _this.global.docH / 4)
         }, 60)
     }
 
