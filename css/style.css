@@ -60,13 +60,13 @@ a {
     -webkit-tap-highlight-color:rgba(0,0,0,0);
 }
 
-.video {
+/* .video {
     position: fixed;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-}
+} */
 
 .log {
     position: fixed;
