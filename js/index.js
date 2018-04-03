@@ -27,7 +27,7 @@
                 alert(err)
             })
         } else {
-            console.error('您的设备不支持摄像头调用！')
+            alert('您的设备不支持摄像头调用！')
         }
     }
 
@@ -49,7 +49,6 @@
             })
         } else {
             alert('您的设备不支持摄像头调用！')
-            console.error('您的设备不支持摄像头调用！')
         }
     }
 
