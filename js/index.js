@@ -21,7 +21,7 @@
                         constraints.deviceId = device.deviceId
                     }
 
-                    var str = 'device: { deviceId:' + device.deviceId + ', kind:' + device.kind + ', label:' + device.label
+                    var str = 'device: { deviceId:' + device.deviceId + ', kind:' + device.kind + ', label:' + device.label + '}'
 
                     alert(str)
                 })
