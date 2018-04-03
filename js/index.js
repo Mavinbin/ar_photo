@@ -18,10 +18,7 @@
     ARPhoto.enumerateDevices = function () {
         var constraints = {
             audio: false,
-            video: {
-                width: window.screen.width,
-                height: window.screen.height
-            }
+            video: {}
         }
         if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
             navigator.mediaDevices.enumerateDevices().then(function (devices) {
@@ -49,8 +46,6 @@
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
                 var oVideo = document.querySelector('#video')
-                oVideo.style.width = window.screen.width
-                oVideo.style.height = window.screen.height
                 oVideo.srcObject = stream
                 // oVideo.play()
                 document.body.addEventListener('click', function () {
