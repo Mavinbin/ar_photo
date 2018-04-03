@@ -42,6 +42,9 @@
                 var oVideo = document.querySelector('#video')
                 oVideo.srcObject = stream
                 oVideo.play()
+                oVideo.addEventListener('click', function () {
+                    oVideo.play()
+                })
                 console.log(stream)
             }).catch(function (err) {
                 console.log(err)
