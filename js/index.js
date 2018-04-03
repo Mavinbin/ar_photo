@@ -40,7 +40,7 @@
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
                 var oVideo = document.querySelector('#video')
-                oVideo.src = stream
+                oVideo.srcObject = stream
                 oVideo.play()
                 console.log(stream)
             }).catch(function (err) {
