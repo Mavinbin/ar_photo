@@ -24,8 +24,10 @@
 
                 ARPhoto.getUserMedia(constraints)
             }).catch(function (err) {
-                console.error(err)
+                alert(err)
             })
+        } else {
+            console.error('您的设备不支持摄像头调用！')
         }
     }
 
@@ -40,12 +42,13 @@
             }).catch(function (err) {
                 console.log(err)
                 if (err.name === 'DevicesNotFoundError') {
-                    console.error('找不到摄像头！')
+                    alert('找不到摄像头！')
                 } else {
-                    console.error(err)
+                    alert(err)
                 }
             })
         } else {
+            alert('您的设备不支持摄像头调用！')
             console.error('您的设备不支持摄像头调用！')
         }
     }
