@@ -18,7 +18,7 @@
                 console.log(devices)
                 devices.forEach(function (device) {
                     if (device.kind === 'videoinput') {
-                        constraints.deviceId = device.deviceId
+                        constraints.video.deviceId = device.deviceId
                     }
 
                     var str = 'device: { deviceId:' + device.deviceId + ', kind:' + device.kind + ', label:' + device.label + '}'
