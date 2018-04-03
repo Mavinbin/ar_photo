@@ -49,6 +49,8 @@
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
                 var oVideo = document.querySelector('#video')
+                oVideo.style.width = window.screen.width
+                oVideo.style.height = window.screen.height
                 oVideo.srcObject = stream
                 // oVideo.play()
                 document.body.addEventListener('click', function () {
