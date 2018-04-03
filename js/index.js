@@ -6,8 +6,8 @@
 
     ARPhoto.global = {
         timer1: null,
-        oTraceWrap = document.getElementById('traceWrap'),
-        oResultWrap = document.getElementById('resultWrap'),
+        oTraceWrap: document.getElementById('traceWrap'),
+        oResultWrap: document.getElementById('resultWrap'),
         oVideo: document.getElementById('video'),
         traceCtx: document.getElementById('trace').getContext('2d'),
         photoCtx: document.getElementById('photo').getContext('2d'),
