@@ -19,6 +19,7 @@
     ARPhoto.domOperation = function() {
         var oBtnShuffer = document.getElementById('btnShutter')
         oBtnShuffer.addEventListener('click', function () {
+            alert(1)
             clearInterval(ARPhoto.global.timer1)
         })
     }
@@ -114,6 +115,7 @@
     // 初始化
     ARPhoto.init = function () {
         this.enumerateDevices()
+        ARPhoto.domOperation()
     }
 
     ARPhoto.init()
