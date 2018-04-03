@@ -19,13 +19,8 @@
         var constraints = {
             audio: false,
             video: {
-                facingMode: 'user',
-                width: {
-                    ideal: document.documentElement.clientWidth
-                },
-                height: {
-                    ideal: document.documentElement.clientHeight
-                }
+                width: document.documentElement.clientWidth,
+                height: document.documentElement.clientHeight
             }
         }
         if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
@@ -52,7 +47,6 @@
     // 调用摄像头
     ARPhoto.getUserMedia = function (constraints) {
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            ARPhoto.log(constraints.video.width.ideal)
             navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
                 var oVideo = document.querySelector('#video')
                 oVideo.srcObject = stream
