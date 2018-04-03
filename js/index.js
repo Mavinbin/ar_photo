@@ -55,12 +55,6 @@
                 document.body.addEventListener('click', function () {
                     oVideo.play()
                 })
-                var interval = setInterval(function () {
-                    if (!oVideo.videoWidth) {
-                        return
-                    }
-
-                })
             }).catch(function (err) {
                 console.log(err)
                 if (err.name === 'DevicesNotFoundError') {
