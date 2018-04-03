@@ -19,7 +19,8 @@
         var constraints = {
             audio: false,
             video: {
-                facingMode: 'user'
+                width: document.documentElement.clientWidth,
+                height: document.documentElement.clientHeight
             }
         }
         if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
@@ -50,7 +51,7 @@
             navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
                 var oVideo = document.querySelector('#video')
                 oVideo.srcObject = stream
-                // oVideo.play()
+                oVideo.play()
                 document.body.addEventListener('click', function () {
                     oVideo.play()
                 })
