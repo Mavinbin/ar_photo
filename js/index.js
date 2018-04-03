@@ -51,11 +51,16 @@
             navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
                 var oVideo = document.querySelector('#video')
                 oVideo.srcObject = stream
-                oVideo.play()
+                // oVideo.play()
                 document.body.addEventListener('click', function () {
                     oVideo.play()
                 })
-                console.log(stream)
+                var interval = setInterval(function () {
+                    if (!oVideo.videoWidth) {
+                        return
+                    }
+
+                })
             }).catch(function (err) {
                 console.log(err)
                 if (err.name === 'DevicesNotFoundError') {
