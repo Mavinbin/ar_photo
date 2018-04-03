@@ -19,8 +19,8 @@
         var constraints = {
             audio: false,
             video: {
-                width: document.documentElement.clientWidth,
-                height: document.documentElement.clientHeight
+                width: window.screen.width,
+                height: window.screen.height
             }
         }
         if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
