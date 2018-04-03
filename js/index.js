@@ -9,14 +9,14 @@
         oTraceWrap: document.getElementById('traceWrap'),
         oResultWrap: document.getElementById('resultWrap'),
         oVideo: document.getElementById('video'),
+        oTrace: document.getElementById('trace'),
         traceCtx: document.getElementById('trace').getContext('2d'),
-        photoCtx: document.getElementById('photo').getContext('2d'),
         docW: document.documentElement.clientWidth,
         docH: document.documentElement.clientHeight
     }
 
     // dom操作
-    ARPhoto.domOperation = function() {
+    ARPhoto.domOperation = function () {
         var oBtnShuffer = document.getElementById('btnShutter'),
             oBtnRedo = document.getElementById('btnRedo')
 
@@ -73,10 +73,6 @@
                         videoDevices.push(device.deviceId)
 
                     }
-
-                    // var str = 'device: { deviceId:' + device.deviceId + ', kind:' + device.kind + ', label:' + device.label + '}'
-
-                    // ARPhoto.log(str)
                 })
 
                 if (ARPhoto.getSystem() === 'Android') {
@@ -103,6 +99,12 @@
                 document.body.addEventListener('click', function () {
                     ARPhoto.global.oVideo.play()
                 })
+                var timer = setInterval(function () {
+                    if (ARPhoto.global.oVideo.videoWidth) {
+                        ARPhoto.initCanvas(ARPhoto.global.oVideo.videoWidth, ARPhoto.global.oVideo.videoHeight)
+                        clearInterval(timer)
+                    }
+                }, 20)
             }).catch(function (err) {
                 console.log(err)
                 if (err.name === 'DevicesNotFoundError') {
@@ -116,11 +118,18 @@
         }
     }
 
+    // 调整canvas的宽高与视频一致, 这里要注意的是不能设置style中的宽高，否则会出现图像变形失真
+    ARPhoto.initCanvas = function (w, h) {
+        this.global.oTrace.setAttribute('width', w)
+        this.global.oTrace.setAttribute('height', h)
+        ARPhoto.drawVideoOnCanvas(w, h)
+    }
+
     // 将视频实时渲染在canvas上
-    ARPhoto.drawVideoOnCanvas = function () {
+    ARPhoto.drawVideoOnCanvas = function (w, h) {
         var _this = this
         _this.global.timer1 = setInterval(function () {
-            _this.global.traceCtx.drawImage(_this.global.oVideo, 0, 0, _this.global.docW, _this.global.docH / 4)
+            _this.global.traceCtx.drawImage(_this.global.oVideo, 0, 0, w, h)
         }, 60)
     }
 
