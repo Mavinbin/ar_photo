@@ -18,10 +18,7 @@
     ARPhoto.enumerateDevices = function () {
         var constraints = {
             audio: false,
-            video: {
-                width: 1280,
-                height: 720
-            }
+            video: true
         }
         if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
             navigator.mediaDevices.enumerateDevices().then(function (devices) {
@@ -51,8 +48,8 @@
             navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
                 var oVideo = document.querySelector('#video')
                 oVideo.srcObject = stream
-                oVideo.play()
-                oVideo.addEventListener('click', function () {
+                // oVideo.play()
+                document.body.addEventListener('click', function () {
                     oVideo.play()
                 })
                 console.log(stream)
