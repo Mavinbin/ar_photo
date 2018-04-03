@@ -30,7 +30,6 @@
         }
         if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
             navigator.mediaDevices.enumerateDevices().then(function (devices) {
-                console.log(devices)
                 devices.forEach(function (device) {
                     if (device.kind === 'videoinput') {
                         constraints.video.deviceId = device.deviceId
@@ -53,6 +52,7 @@
     // 调用摄像头
     ARPhoto.getUserMedia = function (constraints) {
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            ARPhoto.log(constraints.video.width.ideal)
             navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
                 var oVideo = document.querySelector('#video')
                 oVideo.srcObject = stream
