@@ -107,9 +107,9 @@
 
     // 将视频实时渲染在canvas上
     ARPhoto.drawVideoOnCanvas = function () {
-        alert(222)
-        this.global.timer1 = setInterval(function () {
-            this.global.traceCtx.drawImage(this.global.oVideo, 0, 0, docW, docH)
+        var _this = this
+        _this.global.timer1 = setInterval(function () {
+            _this.global.traceCtx.drawImage(_this.global.oVideo, 0, 0, _this.global.docW, _this.global.docH)
         }, 60)
     }
 
