@@ -95,7 +95,6 @@
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
                 ARPhoto.global.oVideo.srcObject = stream
-                ARPhoto.drawVideoOnCanvas()
                 document.body.addEventListener('click', function () {
                     ARPhoto.global.oVideo.play()
                 })
