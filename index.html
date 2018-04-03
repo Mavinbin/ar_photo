@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
     <head lang="en">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
@@ -9,9 +10,19 @@
         <title>AR照相</title>
         <link href="css/style.css" rel="stylesheet">
     </head>
+
     <body>
-        <div class="video-wrap">
-            <video id="video" class="video" autoplay playsinline></video>
+        <div class="container">
+            <div id="videoWrap" class="video-wrap">
+                <video id="video" class="video" autoplay playsinline></video>
+            </div>
+            <div id="resultWrap" class="result-wrap">
+                <canvas id="photo" class="photo"></canvas>
+            </div>
+            <div id="traceWrap" class="trace-wrap">
+                <canvas id="trace" class="trace"></canvas>
+                <a id="btnShutter" class="btn-shutter" href="javascript:;">Tap</a>
+            </div>
         </div>
         <div id="log" class="log"></div>
         <script src="js/index.js"></script>

@@ -4,8 +4,27 @@
 (function () {
     var ARPhoto = {}
 
+    ARPhoto.global = {
+        timer1: null,
+        oTraceWrap = document.getElementById('traceWrap'),
+        oResultWrap = document.getElementById('resultWrap'),
+        oVideo: document.getElementById('video'),
+        traceCtx: document.getElementById('trace').getContext('2d'),
+        photoCtx: document.getElementById('photo').getContext('2d'),
+        docW: document.documentElement.clientWidth,
+        docH: document.documentElement.clientHeight
+    }
+
+    // dom操作
+    ARPhoto.domOperation = function() {
+        var oBtnShuffer = document.getElementById('btnShutter')
+        oBtnShuffer.addEventListener('click', function () {
+            clearInterval(ARPhoto.global.timer1)
+        })
+    }
+
     ARPhoto.log = function (msg) {
-        var oLog = document.querySelector('#log'),
+        var oLog = document.getElementById('log'),
             oSpan = document.createElement('span'),
             oMsg = document.createTextNode(msg)
 
@@ -67,11 +86,10 @@
     ARPhoto.getUserMedia = function (constraints) {
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
-                var oVideo = document.querySelector('#video')
-                oVideo.srcObject = stream
-                // oVideo.play()
+                ARPhoto.global.oVideo.srcObject = stream
+                ARPhoto.drawVideoOnCanvas()
                 document.body.addEventListener('click', function () {
-                    oVideo.play()
+                    ARPhoto.global.oVideo.play()
                 })
             }).catch(function (err) {
                 console.log(err)
@@ -84,6 +102,13 @@
         } else {
             alert('您的设备不支持摄像头调用！')
         }
+    }
+
+    // 将视频实时渲染在canvas上
+    ARPhoto.drawVideoOnCanvas = function () {
+        this.global.timer1 = setInterval(function () {
+            this.global.traceCtx.drawImage(this.global.oVideo, 0, 0, docW, docH)
+        }, 60)
     }
 
     // 初始化
