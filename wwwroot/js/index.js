@@ -7,7 +7,6 @@
     ARPhoto.global = {
         timer1: null,
         oTraceWrap: document.getElementById('traceWrap'),
-        oResultWrap: document.getElementById('resultWrap'),
         oVideo: document.getElementById('video'),
         oTrace: document.getElementById('trace'),
         traceCtx: document.getElementById('trace').getContext('2d'),
@@ -18,20 +17,22 @@
     // dom操作
     ARPhoto.domOperation = function () {
         var oBtnShuffer = document.getElementById('btnShutter'),
-            oBtnRedo = document.getElementById('btnRedo')
+            oBtnRedo = document.getElementById('btnRedo'),
+            oTraceBtns = document.getElementById('traceBtns'),
+            oResultBtns = document.getElementById('resultBtns')
 
         // 点击拍照
         oBtnShuffer.addEventListener('click', function () {
             clearInterval(ARPhoto.global.timer1)
-            this.style.display = 'none'
-            oBtnRedo.style.display = 'block'
+            oTraceBtns.classList.remove('active')
+            oResultBtns.classList.add('active')
         })
 
         // 点击重新拍照
         oBtnRedo.addEventListener('click', function () {
             ARPhoto.drawVideoOnCanvas()
-            this.style.display = 'none'
-            oBtnShuffer.style.display = 'block'
+            oResultBtns.classList.remove('active')
+            oTraceBtns.classList.add('active')
         })
     }
 
@@ -107,7 +108,7 @@
             }).catch(function (err) {
                 console.log(err)
                 if (err.name === 'DevicesNotFoundError') {
-                    alert('找不到摄像头！')
+                    // alert('找不到摄像头！')
                 } else {
                     alert(err)
                 }

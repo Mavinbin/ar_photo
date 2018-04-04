@@ -1,0 +1,93 @@
+/**
+ * 主体样式
+ * @author: Mavinbin
+ * @version: 0.0.1
+ * @date: 2018-04-03
+ */
+@import "variable";
+@import "function";
+@import "reset";
+@import "../font/iconfont";
+
+.container {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.container canvas {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    background: #fff;
+}
+
+.result-wrap, .video-wrap, .trace-wrap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.trace-wrap {
+    z-index: 1;
+}
+
+.video-wrap .video{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+}
+
+.trace-wrap .btn {
+    width: rem(200);
+    height: rem(200);
+    line-height: rem(200);
+    border-radius: 50%;
+    text-align: center;
+    color: #fff;
+    font-size: rem(100);
+    background: #2795fc;
+    box-shadow: 0 0 rem(10) rem(10) rgba(0, 0, 0, 0.2);
+}
+
+.trace-wrap .btn:active {
+    box-shadow: 0 0 rem(10) rem(10) rgba(0, 0, 0, 0.2), inset 0 0 rem(10) rem(10) #1e7cd4;
+}
+
+.trace-wrap .btns {
+    display: none;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 0 0 rem(80);
+}
+
+.trace-wrap .btns.active{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: space-around;
+}
+
+.log {
+    position: fixed;
+    right: rem(20);
+    top: rem(20);
+    padding: rem(20);
+    width: 40%;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+}
+
+.log span {
+    display: block;
+}

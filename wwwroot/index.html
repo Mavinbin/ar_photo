@@ -9,6 +9,7 @@
         <meta name="author" content="Mavinbin(186905) | 2018-04-03">
         <title>AR照相</title>
         <link href="css/style.css" rel="stylesheet">
+        <script src="js/flexible.js"></script>
     </head>
 
     <body>
@@ -16,13 +17,15 @@
             <div id="videoWrap" class="video-wrap">
                 <video id="video" class="video" autoplay playsinline></video>
             </div>
-            <div id="resultWrap" class="result-wrap">
-                <canvas id="photo" class="photo"></canvas>
-            </div>
             <div id="traceWrap" class="trace-wrap">
                 <canvas id="trace" class="trace"></canvas>
-                <a id="btnShutter" class="btn btn-shutter" href="javascript:;">Tap</a>
-                <a id="btnRedo" class="btn btn-redo" href="javascript:;">Redo</a>
+                <div id="traceBtns" class="btns active">
+                    <a id="btnShutter" class="btn btn-shutter iconfont icon-camera" href="javascript:;"></a>
+                </div>
+                <div id="resultBtns" class="btns result-btns">
+                    <a id="btnShareFB" class="btn btn-redo iconfont icon-icon_facebook" href="javascript:;"></a>
+                    <a id="btnRedo" class="btn btn-redo iconfont icon-back" href="javascript:;"></a>
+                </div>
             </div>
         </div>
         <div id="log" class="log"></div>
