@@ -1,0 +1,1 @@
+var Smoother=function(e,t,n){"use strict";var r=+new Date,i=e.slice(0),e=e.slice(0),o=t.slice(0),a=t.slice(0),s=t.length,n="undefined"!=typeof n?n:1;this.smooth=function(t){var c=[],f=new Date-r;r+=f,f/=1e3;for(var h=0;s>h;++h){e[h]=e[h]/(e[h]+Math.pow(1-i[h],f));var l=o[h];o[h]=e[h]*t[h]+(1-e[h])*(o[h]+a[h]*f),a[h]=e[h]*(o[h]-l)/f+(1-e[h])*a[h],c[h]=o[h]+f*n*a[h]}return c}};
