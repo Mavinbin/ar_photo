@@ -15,7 +15,7 @@
     <body>
         <div class="container">
             <div id="videoWrap" class="video-wrap">
-                <video id="video" class="video" autoplay playsinline src="video/1.mp4"></video>
+                <video id="video" class="video" autoplay playsinline></video>
             </div>
             <div id="traceWrap" class="trace-wrap">
                 <canvas id="trace" class="trace"></canvas>
@@ -28,12 +28,11 @@
                 </div>
             </div>
         </div>
-        <div id="log" class="log"></div>
-        <script src="js/tracking/tracking-min.js"></script>
-        <script src="js/tracking/data/face-min.js"></script>
-        <script src="js/tracking/data/eye-min.js"></script>
-        <script src="js/tracking/data/mouth-min.js"></script>
-        <script src="js/index.js"></script>
+        <!-- <div id="log" class="log"></div> -->
+        <script src="js/objectdetect/smoother.js"></script>
+        <script src="js/objectdetect/objectdetect.js"></script>
+        <script src="js/objectdetect/objectdetect.frontalface.js"></script>
+        <script src="js/index2.js"></script>
     </body>
 
 </html>

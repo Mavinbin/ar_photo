@@ -12,7 +12,27 @@
         traceCtx: document.getElementById('trace').getContext('2d'),
         canvasW: document.documentElement.clientWidth,
         canvasH: document.documentElement.clientHeight,
-        trackTask: null
+        detector: null,
+        smoother: new Smoother([0.9999999, 0.9999999, 0.999, 0.999], [0, 0, 0, 0])
+    }
+
+    ARPhoto.requestAnimationFrame = function (callback, element) {
+        var requestAnimationFrame =
+            window.requestAnimationFrame ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame ||
+            window.oRequestAnimationFrame ||
+            function (callback, element) {
+                var currTime = new Date().getTime();
+                var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+                var id = window.setTimeout(function () {
+                    callback(currTime + timeToCall);
+                }, timeToCall);
+                lastTime = currTime + timeToCall;
+                return id;
+            };
+
+        return requestAnimationFrame.call(window, callback, element);
     }
 
     // dom操作
@@ -28,16 +48,14 @@
             oTraceBtns.classList.remove('active')
             oResultBtns.classList.add('active')
             ARPhoto.global.oVideo.pause()
-            ARPhoto.global.trackTask.stop()
         })
 
         // 点击重新拍照
         oBtnRedo.addEventListener('click', function () {
-            ARPhoto.drawVideoOnCanvas()
             oResultBtns.classList.remove('active')
             oTraceBtns.classList.add('active')
             ARPhoto.global.oVideo.play()
-            ARPhoto.global.trackTask.run()
+            ARPhoto.requestAnimationFrame(ARPhoto.track)
         })
     }
 
@@ -130,50 +148,49 @@
         this.global.canvasW = w
         this.global.canvasH = h
 
-        ARPhoto.drawVideoOnCanvas()
-        ARPhoto.track()
+        ARPhoto.requestAnimationFrame(ARPhoto.track)
     }
 
-    // 将视频实时渲染在canvas上
-    ARPhoto.drawVideoOnCanvas = function () {
-        var _this = this
-        // _this.global.timer1 = setInterval(function () {
-        //     _this.global.traceCtx.drawImage(_this.global.oVideo, 0, 0, _this.global.canvasW, _this.global.canvasH)
-        // }, 30)
-    }
-
-    // 人脸识别
+    // // 人脸识别
     ARPhoto.track = function () {
-        var objects = new tracking.ObjectTracker(['face'])
+        var anmationFrame = ARPhoto.requestAnimationFrame(ARPhoto.track)
+        ARPhoto.global.traceCtx.clearRect(0, 0, ARPhoto.global.canvasW, ARPhoto.global.canvasH)
 
-        objects.on('track', function (e) {
-            ARPhoto.global.traceCtx.clearRect(0 , 0, ARPhoto.global.canvasW, ARPhoto.global.canvasH)
-            if (e.data.length > 0) {
-                e.data.forEach(function (rect) {
-                    ARPhoto.global.traceCtx.lineWidth = 4
-                    ARPhoto.global.traceCtx.strokeStyle = '#f00'
-                    ARPhoto.global.traceCtx.strokeRect(rect.x, rect.y, rect.width, rect.height)
-                })
-            }
-        })
+        if (!ARPhoto.global.detector) {
+            ARPhoto.global.detector = new objectdetect.detector(ARPhoto.global.oVideo.videoWidth, ARPhoto.global.oVideo.videoHeight, 1.1, objectdetect.frontalface);
+        }
 
-        this.global.trackTask = tracking.track('#video', objects)
+        var coords = ARPhoto.global.detector.detect(ARPhoto.global.oVideo, 1)
+
+        var faceCoord = coords[0]
+
+        // faceCoord = ARPhoto.global.smoother.smooth(faceCoord)
+
+        if (faceCoord) {
+            ARPhoto.global.traceCtx.lineWidth = 2
+            ARPhoto.global.traceCtx.strokeStyle = '#f00'
+            ARPhoto.global.traceCtx.strokeRect(faceCoord[0], faceCoord[1], faceCoord[2], faceCoord[3])
+        }
+
+        if (ARPhoto.global.oVideo.paused) {
+            cancelAnimationFrame(anmationFrame)
+        }
     }
 
     // 初始化
     ARPhoto.init = function () {
-        // this.enumerateDevices()
+        this.enumerateDevices()
+        // var timer = setInterval(function () {
+        //     if (ARPhoto.global.oVideo.readyState === ARPhoto.global.oVideo.HAVE_ENOUGH_DATA && ARPhoto.global.oVideo.videoWidth > 0) {
+        //         ARPhoto.initCanvas(ARPhoto.global.oVideo.videoWidth, ARPhoto.global.oVideo.videoHeight)
+        //         clearInterval(timer)
+        //     }
+        // }, 20)
         ARPhoto.domOperation()
-        var timer = setInterval(function () {
-            console.log(111)
-            if (ARPhoto.global.oVideo.videoWidth) {
-                console.log(222)
-                ARPhoto.initCanvas(ARPhoto.global.oVideo.videoWidth, ARPhoto.global.oVideo.videoHeight)
-                clearInterval(timer)
-            }
-        }, 20)
     }
 
-    ARPhoto.init()
+    window.onload = function () {
+        ARPhoto.init()
+    }
 
 })()
