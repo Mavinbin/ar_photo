@@ -147,8 +147,7 @@
         this.global.oTrace.setAttribute('height', h)
         this.global.canvasW = w
         this.global.canvasH = h
-
-        ARPhoto.requestAnimationFrame(ARPhoto.track)
+        ARPhoto.track()
     }
 
     // // 人脸识别
@@ -163,6 +162,7 @@
         var coords = ARPhoto.global.detector.detect(ARPhoto.global.oVideo, 1)
 
         var faceCoord = coords[0]
+
 
         // faceCoord = ARPhoto.global.smoother.smooth(faceCoord)
 
@@ -179,13 +179,13 @@
 
     // 初始化
     ARPhoto.init = function () {
-        this.enumerateDevices()
-        // var timer = setInterval(function () {
-        //     if (ARPhoto.global.oVideo.readyState === ARPhoto.global.oVideo.HAVE_ENOUGH_DATA && ARPhoto.global.oVideo.videoWidth > 0) {
-        //         ARPhoto.initCanvas(ARPhoto.global.oVideo.videoWidth, ARPhoto.global.oVideo.videoHeight)
-        //         clearInterval(timer)
-        //     }
-        // }, 20)
+        // this.enumerateDevices()
+        var timer = setInterval(function () {
+            if (ARPhoto.global.oVideo.readyState === ARPhoto.global.oVideo.HAVE_ENOUGH_DATA && ARPhoto.global.oVideo.videoWidth > 0) {
+                ARPhoto.initCanvas(ARPhoto.global.oVideo.videoWidth, ARPhoto.global.oVideo.videoHeight)
+                clearInterval(timer)
+            }
+        }, 20)
         ARPhoto.domOperation()
     }
 

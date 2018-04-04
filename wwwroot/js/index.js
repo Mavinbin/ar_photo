@@ -15,6 +15,25 @@
         trackTask: null
     }
 
+    ARPhoto.requestAnimationFrame = function (callback, element) {
+        var requestAnimationFrame =
+            window.requestAnimationFrame ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame ||
+            window.oRequestAnimationFrame ||
+            function (callback, element) {
+                var currTime = new Date().getTime();
+                var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+                var id = window.setTimeout(function () {
+                    callback(currTime + timeToCall);
+                }, timeToCall);
+                lastTime = currTime + timeToCall;
+                return id;
+            };
+
+        return requestAnimationFrame.call(window, callback, element);
+    }
+
     // dom操作
     ARPhoto.domOperation = function () {
         var oBtnShuffer = document.getElementById('btnShutter'),
@@ -33,7 +52,7 @@
 
         // 点击重新拍照
         oBtnRedo.addEventListener('click', function () {
-            ARPhoto.drawVideoOnCanvas()
+            ARPhoto.requestAnimationFrame(ARPhoto.track)
             oResultBtns.classList.remove('active')
             oTraceBtns.classList.add('active')
             ARPhoto.global.oVideo.play()
@@ -130,17 +149,16 @@
         this.global.canvasW = w
         this.global.canvasH = h
 
-        ARPhoto.drawVideoOnCanvas()
-        ARPhoto.track()
+        ARPhoto.requestAnimationFrame(ARPhoto.track)
     }
 
     // 将视频实时渲染在canvas上
-    ARPhoto.drawVideoOnCanvas = function () {
-        var _this = this
-        // _this.global.timer1 = setInterval(function () {
-        //     _this.global.traceCtx.drawImage(_this.global.oVideo, 0, 0, _this.global.canvasW, _this.global.canvasH)
-        // }, 30)
-    }
+    // ARPhoto.drawVideoOnCanvas = function () {
+    //     var _this = this
+    //     _this.global.timer1 = setInterval(function () {
+    //         _this.global.traceCtx.drawImage(_this.global.oVideo, 0, 0, _this.global.canvasW, _this.global.canvasH)
+    //     }, 30)
+    // }
 
     // 人脸识别
     ARPhoto.track = function () {
@@ -157,7 +175,7 @@
             }
         })
 
-        this.global.trackTask = tracking.track('#video', objects)
+        ARPhoto.global.trackTask = tracking.track('#video', objects)
     }
 
     // 初始化
@@ -165,9 +183,7 @@
         // this.enumerateDevices()
         ARPhoto.domOperation()
         var timer = setInterval(function () {
-            console.log(111)
             if (ARPhoto.global.oVideo.videoWidth) {
-                console.log(222)
                 ARPhoto.initCanvas(ARPhoto.global.oVideo.videoWidth, ARPhoto.global.oVideo.videoHeight)
                 clearInterval(timer)
             }
