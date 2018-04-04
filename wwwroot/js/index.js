@@ -11,7 +11,8 @@
         oTrace: document.getElementById('trace'),
         traceCtx: document.getElementById('trace').getContext('2d'),
         canvasW: document.documentElement.clientWidth,
-        canvasH: document.documentElement.clientHeight
+        canvasH: document.documentElement.clientHeight,
+        trackTask: null
     }
 
     // dom操作
@@ -26,6 +27,8 @@
             clearInterval(ARPhoto.global.timer1)
             oTraceBtns.classList.remove('active')
             oResultBtns.classList.add('active')
+            ARPhoto.global.oVideo.pause()
+            ARPhoto.global.trackTask.stop()
         })
 
         // 点击重新拍照
@@ -33,6 +36,8 @@
             ARPhoto.drawVideoOnCanvas()
             oResultBtns.classList.remove('active')
             oTraceBtns.classList.add('active')
+            ARPhoto.global.oVideo.play()
+            ARPhoto.global.trackTask.run()
         })
     }
 
@@ -126,14 +131,33 @@
         this.global.canvasH = h
 
         ARPhoto.drawVideoOnCanvas()
+        ARPhoto.track()
     }
 
     // 将视频实时渲染在canvas上
     ARPhoto.drawVideoOnCanvas = function () {
         var _this = this
-        _this.global.timer1 = setInterval(function () {
-            _this.global.traceCtx.drawImage(_this.global.oVideo, 0, 0, _this.global.canvasW, _this.global.canvasH)
-        }, 60)
+        // _this.global.timer1 = setInterval(function () {
+        //     _this.global.traceCtx.drawImage(_this.global.oVideo, 0, 0, _this.global.canvasW, _this.global.canvasH)
+        // }, 30)
+    }
+
+    // 人脸识别
+    ARPhoto.track = function () {
+        var objects = new tracking.ObjectTracker(['face'])
+
+        objects.on('track', function (e) {
+            ARPhoto.global.traceCtx.clearRect(0 , 0, ARPhoto.global.canvasW, ARPhoto.global.canvasH)
+            if (e.data.length > 0) {
+                e.data.forEach(function (rect) {
+                    ARPhoto.global.traceCtx.lineWidth = 4
+                    ARPhoto.global.traceCtx.strokeStyle = '#f00'
+                    ARPhoto.global.traceCtx.strokeRect(rect.x, rect.y, rect.width, rect.height)
+                })
+            }
+        })
+
+        this.global.trackTask = tracking.track('#video', objects)
     }
 
     // 初始化
