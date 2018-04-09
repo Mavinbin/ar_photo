@@ -43,7 +43,6 @@
 
         // 点击拍照
         oBtnShuffer.addEventListener('click', function () {
-            clearInterval(ARPhoto.global.timer1)
             oTraceBtns.classList.remove('active')
             oResultBtns.classList.add('active')
             ARPhoto.global.oVideo.pause()
@@ -52,7 +51,6 @@
 
         // 点击重新拍照
         oBtnRedo.addEventListener('click', function () {
-            ARPhoto.requestAnimationFrame(ARPhoto.track)
             oResultBtns.classList.remove('active')
             oTraceBtns.classList.add('active')
             ARPhoto.global.oVideo.play()
@@ -148,8 +146,7 @@
         this.global.oTrace.setAttribute('height', h)
         this.global.canvasW = w
         this.global.canvasH = h
-
-        ARPhoto.requestAnimationFrame(ARPhoto.track)
+        ARPhoto.track()
     }
 
     // 将视频实时渲染在canvas上
@@ -162,6 +159,7 @@
 
     // 人脸识别
     ARPhoto.track = function () {
+        // ARPhoto.requestAnimationFrame(ARPhoto.track)
         var objects = new tracking.ObjectTracker(['face'])
 
         objects.on('track', function (e) {
