@@ -9,10 +9,17 @@
         oTraceWrap: document.getElementById('traceWrap'),
         oVideo: document.getElementById('video'),
         oTrace: document.getElementById('trace'),
+        oDecorations: document.getElementById('decorations'),
+        oHat: document.getElementById('hat'),
+        oGlass: document.getElementById('glass'),
+        oShyLine: document.getElementById('shyLine'),
+        oBeard: document.getElementById('beard'),
         traceCtx: document.getElementById('trace').getContext('2d'),
         canvasW: document.documentElement.clientWidth,
         canvasH: document.documentElement.clientHeight,
-        ctracker: null
+        ctracker: null,
+        hatInitW: 0,
+        hatInitH: 0
     }
 
     ARPhoto.requestAnimationFrame = function (callback, element) {
@@ -94,7 +101,6 @@
                 devices.forEach(function (device) {
                     if (device.kind === 'videoinput') {
                         videoDevices.push(device.deviceId)
-
                     }
                 })
 
@@ -146,6 +152,8 @@
         this.global.oVideo.setAttribute('height', h)
         this.global.oTrace.setAttribute('width', w)
         this.global.oTrace.setAttribute('height', h)
+        this.global.oDecorations.style.width = w + 'px'
+        this.global.oDecorations.style.height = h + 'px'
         this.global.canvasW = w
         this.global.canvasH = h
         ARPhoto.track()
@@ -164,6 +172,16 @@
         requestAnimationFrame(ARPhoto.drawLoop)
 
         if (positions) {
+            var headW = positions[14][0] - positions[0][0],
+                headTangle = Math.atan((positions[14][1] - positions[0][1]) / (positions[14][0] - positions[0][0])) * 180,
+                hatRealW = ARPhoto.global.hatInitW / 300 * headW,
+                hatRealH = ARPhoto.global.hatInitH * hatRealW / ARPhoto.global.hatInitW,
+                hatL = positions[0][0] - (ARPhoto.global.hatInitW - 300) / 2 * hatRealW / ARPhoto.global.hatInitW,
+                hatT = positions[20][1] >= positions[17][1] ? positions[20][1] - hatRealH + 'px' : positions[17][1] - hatRealH
+
+            ARPhoto.global.oHat.style.width = hatRealW + 'px'
+            ARPhoto.global.oHat.style.height = hatRealH + 'px'
+            ARPhoto.global.oHat.style.transform = 'translate(' + hatL + 'px, ' + hatT + ') rotate(' + (headTangle) + 'deg)'
             ARPhoto.global.traceCtx.clearRect(0, 0, ARPhoto.global.canvasW, ARPhoto.global.canvasH)
             ARPhoto.global.ctracker.draw(ARPhoto.global.oTrace)
         }
@@ -172,6 +190,8 @@
     // 初始化
     ARPhoto.init = function () {
         this.enumerateDevices()
+        this.global.hatInitW = ARPhoto.global.oHat.width
+        this.global.hatInitH = ARPhoto.global.oHat.height
         // var timer = setInterval(function () {
         //     if (ARPhoto.global.oVideo.readyState === ARPhoto.global.oVideo.HAVE_ENOUGH_DATA && ARPhoto.global.oVideo.videoWidth > 0) {
         //         ARPhoto.initCanvas(ARPhoto.global.oVideo.videoWidth, ARPhoto.global.oVideo.videoHeight)
