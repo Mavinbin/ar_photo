@@ -214,7 +214,7 @@
             ARPhoto.global.oShyLine.style.display = 'block'
             // ARPhoto.global.oShyLine.style['transform-origin'] = 'center'
             ARPhoto.global.oShyLine.style.transform = 'translate(' + shyLineL + 'px, ' + shyLineT + 'px) rotate(' + (-headAngle) + 'deg)'
-            // ARPhoto.global.ctracker.draw(ARPhoto.global.oTrace)
+            ARPhoto.global.ctracker.draw(ARPhoto.global.oTrace)
         }
     }
 
