@@ -19,7 +19,11 @@
         canvasH: document.documentElement.clientHeight,
         ctracker: null,
         hatInitW: 0,
-        hatInitH: 0
+        hatInitH: 0,
+        glassInitW: 0,
+        glassInitH: 0,
+        shyLineInitW: 0,
+        shyLineInitH: 0
     }
 
     ARPhoto.requestAnimationFrame = function (callback, element) {
@@ -173,17 +177,44 @@
 
         if (positions) {
             var headW = positions[14][0] - positions[0][0],
-                headTangle = Math.atan((positions[14][1] - positions[0][1]) / (positions[14][0] - positions[0][0])) * 180,
-                hatRealW = ARPhoto.global.hatInitW / 300 * headW,
+                headAngle = Math.atan((positions[33][0] - positions[62][0]) / (positions[33][1] - positions[62][1])) * 180 / Math.PI,
+                hatRealW = ARPhoto.global.hatInitW / 350 * headW,
                 hatRealH = ARPhoto.global.hatInitH * hatRealW / ARPhoto.global.hatInitW,
-                hatL = positions[0][0] - (ARPhoto.global.hatInitW - 300) / 2 * hatRealW / ARPhoto.global.hatInitW,
+                hatL = positions[0][0] - (ARPhoto.global.hatInitW - 350) / 2 * hatRealW / ARPhoto.global.hatInitW,
                 hatT = positions[20][1] >= positions[17][1] ? positions[20][1] - hatRealH + 'px' : positions[17][1] - hatRealH
 
             ARPhoto.global.oHat.style.width = hatRealW + 'px'
             ARPhoto.global.oHat.style.height = hatRealH + 'px'
-            ARPhoto.global.oHat.style.transform = 'translate(' + hatL + 'px, ' + hatT + ') rotate(' + (headTangle) + 'deg)'
+            ARPhoto.global.oHat.style.display = 'block'
+            ARPhoto.global.oHat.style['transform-origin'] = 'center bottom'
+            ARPhoto.global.oHat.style.transform = 'translate(' + hatL + 'px, ' + hatT + 'px) rotate(' + (-headAngle) + 'deg)'
+            // ARPhoto.global.traceCtx.clearRect(0, 0, ARPhoto.global.canvasW, ARPhoto.global.canvasH)
+            // ARPhoto.global.ctracker.draw(ARPhoto.global.oTrace)
+
+            var glassRealW = headW,
+                glassRealH = ARPhoto.global.glassInitH * glassRealW / ARPhoto.global.glassInitW,
+                glassL = positions[27][0] - (positions[27][0] - positions[0][0]),
+                glassT = positions[27][1] >= positions[32][1] ? positions[27][1] - glassRealH / 2 + 'px' : positions[32][1] - glassRealH / 2
+
+            ARPhoto.global.oGlass.style.width = glassRealW + 'px'
+            ARPhoto.global.oGlass.style.height = glassRealH + 'px'
+            ARPhoto.global.oGlass.style.display = 'block'
+            ARPhoto.global.oGlass.style['transform-origin'] = 'center bottom'
+            ARPhoto.global.oGlass.style.transform = 'translate(' + glassL + 'px, ' + glassT + 'px) rotate(' + (-headAngle) + 'deg)'
+
             ARPhoto.global.traceCtx.clearRect(0, 0, ARPhoto.global.canvasW, ARPhoto.global.canvasH)
-            ARPhoto.global.ctracker.draw(ARPhoto.global.oTrace)
+
+            var shyLineRealW = positions[13][0] - positions[1][0],
+                shyLineRealH = ARPhoto.global.shyLineInitW * shyLineRealW / ARPhoto.global.shyLineInitH,
+                shyLineL = positions[2][0],
+                shyLineT = positions[1][1] >= positions[13][1] ? positions[1][1] - shyLineRealH / 2 + 'px' : positions[13][1] - shyLineRealH / 2
+
+            ARPhoto.global.oShyLine.style.width = shyLineRealW + 'px'
+            ARPhoto.global.oShyLine.style.height = shyLineRealH + 'px'
+            ARPhoto.global.oShyLine.style.display = 'block'
+            // ARPhoto.global.oShyLine.style['transform-origin'] = 'center'
+            ARPhoto.global.oShyLine.style.transform = 'translate(' + shyLineL + 'px, ' + shyLineT + 'px) rotate(' + (-headAngle) + 'deg)'
+            // ARPhoto.global.ctracker.draw(ARPhoto.global.oTrace)
         }
     }
 
@@ -192,6 +223,10 @@
         this.enumerateDevices()
         this.global.hatInitW = ARPhoto.global.oHat.width
         this.global.hatInitH = ARPhoto.global.oHat.height
+        this.global.glassInitW = ARPhoto.global.oGlass.width
+        this.global.glassInitH = ARPhoto.global.oGlass.height
+        this.global.shyLineInitW = ARPhoto.global.oShyLine.width
+        this.global.shyLineInitH = ARPhoto.global.oShyLine.height
         // var timer = setInterval(function () {
         //     if (ARPhoto.global.oVideo.readyState === ARPhoto.global.oVideo.HAVE_ENOUGH_DATA && ARPhoto.global.oVideo.videoWidth > 0) {
         //         ARPhoto.initCanvas(ARPhoto.global.oVideo.videoWidth, ARPhoto.global.oVideo.videoHeight)
