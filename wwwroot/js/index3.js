@@ -10,11 +10,11 @@
         oVideo: document.getElementById('video'),
         oTrace: document.getElementById('trace'),
         oDecorations: document.getElementById('decorations'),
-        oHat: document.getElementById('hat'),
         oGlass: document.getElementById('glass'),
         oShyLine: document.getElementById('shyLine'),
         oBeard: document.getElementById('beard'),
         traceCtx: document.getElementById('trace').getContext('2d'),
+        traceStage: new createjs.Stage('trace'),
         canvasW: document.documentElement.clientWidth,
         canvasH: document.documentElement.clientHeight,
         ctracker: null,
@@ -23,7 +23,7 @@
         glassInitW: 0,
         glassInitH: 0,
         shyLineInitW: 0,
-        shyLineInitH: 0
+        shyLineInitH: 0,
     }
 
     ARPhoto.requestAnimationFrame = function (callback, element) {
@@ -171,6 +171,16 @@
         ARPhoto.drawLoop()
     }
 
+    // 初始化图片
+    ARPhoto.initDerections = function (name) {
+        var img = new createjs.Bitmap('../img/' + name + '.png'),
+            imgBounds = img.getBounds(),
+            elName = 'img' + name[0].toUpperCase() + name.slice(1)
+        ARPhoto.global[elName] = img
+        ARPhoto.global[name + 'InitW'] = imgBounds.width
+        ARPhoto.global[name + 'InitH'] = imgBounds.height
+    }
+
     ARPhoto.drawLoop = function () {
         var positions = ARPhoto.global.ctracker.getCurrentPosition()
         requestAnimationFrame(ARPhoto.drawLoop)
@@ -180,40 +190,56 @@
                 headAngle = Math.atan((positions[33][0] - positions[62][0]) / (positions[33][1] - positions[62][1])) * 180 / Math.PI,
                 hatRealW = ARPhoto.global.hatInitW / 350 * headW,
                 hatRealH = ARPhoto.global.hatInitH * hatRealW / ARPhoto.global.hatInitW,
-                hatL = positions[0][0] - (ARPhoto.global.hatInitW - 350) / 2 * hatRealW / ARPhoto.global.hatInitW,
-                hatT = positions[20][1] >= positions[17][1] ? positions[20][1] - hatRealH + 'px' : positions[17][1] - hatRealH
+                hatL = positions[33][0] - hatRealW * 340 / ARPhoto.global.hatInitW,
+                hatT = positions[20][1] > positions[17][1] ? positions[20][1] - hatRealH - 10 : positions[17][1] - hatRealH - 10
 
-            ARPhoto.global.oHat.style.width = hatRealW + 'px'
-            ARPhoto.global.oHat.style.height = hatRealH + 'px'
-            ARPhoto.global.oHat.style.display = 'block'
-            ARPhoto.global.oHat.style['transform-origin'] = 'center bottom'
-            ARPhoto.global.oHat.style.transform = 'translate(' + hatL + 'px, ' + hatT + 'px) rotate(' + (-headAngle) + 'deg)'
+            // ARPhoto.global.oHat.style.width = hatRealW + 'px'
+            // ARPhoto.global.oHat.style.height = hatRealH + 'px'
+            // ARPhoto.global.oHat.style.display = 'block'
+            // ARPhoto.global.oHat.style['transform-origin'] = 'center bottom'
+            // ARPhoto.global.oHat.style.transform = 'translate(' + hatL + 'px, ' + hatT + 'px) rotate(' + (-headAngle) + 'deg)'
+
+            // ARPhoto.global.imgHat.scaleX = 0.5,
+            // ARPhoto.global.imgHat.scaleY = 0.5,
+            // ARPhoto.global.imgHat.regX = hatRealW / 2
+            // ARPhoto.global.imgHat.regY = hatRealH / 2
+            // ARPhoto.global.imgHat.x = ARPhoto.global.hatInitW * 0.5 / 8,
+            // ARPhoto.global.imgHat.y = ARPhoto.global.hatInitW * 0.5 / 8
+            ARPhoto.global.imgHat.set({
+                x: hatL,
+                y: hatT,
+                scaleX: hatRealW / ARPhoto.global.hatInitW,
+                scaleY: hatRealH / ARPhoto.global.hatInitH,
+                // rotation: - headAngle,
+                // regX: hatRealW / 2,
+                // regY: hatRealH
+            })
+            // ARPhoto.global.imgHat.setTransform(hatL, hatT, hatRealW / ARPhoto.global.hatInitW, hatRealH / ARPhoto.global.hatInitH, - headAngle, 0, 0)
+            ARPhoto.global.traceStage.addChild(ARPhoto.global.imgHat)
+            ARPhoto.global.traceStage.update()
+            // var glassRealW = headW,
+            //     glassRealH = ARPhoto.global.glassInitH * glassRealW / ARPhoto.global.glassInitW,
+            //     glassL = positions[27][0] - (positions[27][0] - positions[0][0]),
+            //     glassT = positions[27][1] >= positions[32][1] ? positions[27][1] - glassRealH / 2 + 'px' : positions[32][1] - glassRealH / 2
+
+            // ARPhoto.global.oGlass.style.width = glassRealW + 'px'
+            // ARPhoto.global.oGlass.style.height = glassRealH + 'px'
+            // ARPhoto.global.oGlass.style.display = 'block'
+            // ARPhoto.global.oGlass.style['transform-origin'] = 'center bottom'
+            // ARPhoto.global.oGlass.style.transform = 'translate(' + glassL + 'px, ' + glassT + 'px) rotate(' + (-headAngle) + 'deg)'
+
             // ARPhoto.global.traceCtx.clearRect(0, 0, ARPhoto.global.canvasW, ARPhoto.global.canvasH)
-            // ARPhoto.global.ctracker.draw(ARPhoto.global.oTrace)
 
-            var glassRealW = headW,
-                glassRealH = ARPhoto.global.glassInitH * glassRealW / ARPhoto.global.glassInitW,
-                glassL = positions[27][0] - (positions[27][0] - positions[0][0]),
-                glassT = positions[27][1] >= positions[32][1] ? positions[27][1] - glassRealH / 2 + 'px' : positions[32][1] - glassRealH / 2
+            // var shyLineRealW = positions[13][0] - positions[1][0],
+            //     shyLineRealH = ARPhoto.global.shyLineInitW * shyLineRealW / ARPhoto.global.shyLineInitH,
+            //     shyLineL = positions[2][0],
+            //     shyLineT = positions[1][1] >= positions[13][1] ? positions[1][1] - shyLineRealH / 2 + 'px' : positions[13][1] - shyLineRealH / 2
 
-            ARPhoto.global.oGlass.style.width = glassRealW + 'px'
-            ARPhoto.global.oGlass.style.height = glassRealH + 'px'
-            ARPhoto.global.oGlass.style.display = 'block'
-            ARPhoto.global.oGlass.style['transform-origin'] = 'center bottom'
-            ARPhoto.global.oGlass.style.transform = 'translate(' + glassL + 'px, ' + glassT + 'px) rotate(' + (-headAngle) + 'deg)'
-
-            ARPhoto.global.traceCtx.clearRect(0, 0, ARPhoto.global.canvasW, ARPhoto.global.canvasH)
-
-            var shyLineRealW = positions[13][0] - positions[1][0],
-                shyLineRealH = ARPhoto.global.shyLineInitW * shyLineRealW / ARPhoto.global.shyLineInitH,
-                shyLineL = positions[2][0],
-                shyLineT = positions[1][1] >= positions[13][1] ? positions[1][1] - shyLineRealH / 2 + 'px' : positions[13][1] - shyLineRealH / 2
-
-            ARPhoto.global.oShyLine.style.width = shyLineRealW + 'px'
-            ARPhoto.global.oShyLine.style.height = shyLineRealH + 'px'
-            ARPhoto.global.oShyLine.style.display = 'block'
-            // ARPhoto.global.oShyLine.style['transform-origin'] = 'center'
-            ARPhoto.global.oShyLine.style.transform = 'translate(' + shyLineL + 'px, ' + shyLineT + 'px) rotate(' + (-headAngle) + 'deg)'
+            // ARPhoto.global.oShyLine.style.width = shyLineRealW + 'px'
+            // ARPhoto.global.oShyLine.style.height = shyLineRealH + 'px'
+            // ARPhoto.global.oShyLine.style.display = 'block'
+            // // ARPhoto.global.oShyLine.style['transform-origin'] = 'center'
+            // ARPhoto.global.oShyLine.style.transform = 'translate(' + shyLineL + 'px, ' + shyLineT + 'px) rotate(' + (-headAngle) + 'deg)'
             ARPhoto.global.ctracker.draw(ARPhoto.global.oTrace)
         }
     }
@@ -221,8 +247,7 @@
     // 初始化
     ARPhoto.init = function () {
         this.enumerateDevices()
-        this.global.hatInitW = ARPhoto.global.oHat.width
-        this.global.hatInitH = ARPhoto.global.oHat.height
+        ARPhoto.initDerections('hat')
         this.global.glassInitW = ARPhoto.global.oGlass.width
         this.global.glassInitH = ARPhoto.global.oGlass.height
         this.global.shyLineInitW = ARPhoto.global.oShyLine.width
