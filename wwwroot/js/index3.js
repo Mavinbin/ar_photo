@@ -173,7 +173,7 @@
 
     // 初始化图片
     ARPhoto.initDerections = function (name) {
-        var img = new createjs.Bitmap('../img/' + name + '.png'),
+        var img = new createjs.Bitmap('img/' + name + '.png'),
             imgBounds = img.getBounds(),
             elName = 'img' + name[0].toUpperCase() + name.slice(1)
         ARPhoto.global[elName] = img
