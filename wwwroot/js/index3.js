@@ -215,18 +215,18 @@
 
     // 初始化
     ARPhoto.init = function () {
-        // this.enumerateDevices()
+        this.enumerateDevices()
         ARPhoto.initDerections('hat')
         this.global.glassInitW = ARPhoto.global.oGlass.width
         this.global.glassInitH = ARPhoto.global.oGlass.height
         this.global.shyLineInitW = ARPhoto.global.oShyLine.width
         this.global.shyLineInitH = ARPhoto.global.oShyLine.height
-        var timer = setInterval(function () {
-            if (ARPhoto.global.oVideo.readyState === ARPhoto.global.oVideo.HAVE_ENOUGH_DATA && ARPhoto.global.oVideo.videoWidth > 0) {
-                ARPhoto.initCanvas(ARPhoto.global.oVideo.videoWidth, ARPhoto.global.oVideo.videoHeight)
-                clearInterval(timer)
-            }
-        }, 20)
+        // var timer = setInterval(function () {
+        //     if (ARPhoto.global.oVideo.readyState === ARPhoto.global.oVideo.HAVE_ENOUGH_DATA && ARPhoto.global.oVideo.videoWidth > 0) {
+        //         ARPhoto.initCanvas(ARPhoto.global.oVideo.videoWidth, ARPhoto.global.oVideo.videoHeight)
+        //         clearInterval(timer)
+        //     }
+        // }, 20)
         ARPhoto.domOperation()
     }
 
