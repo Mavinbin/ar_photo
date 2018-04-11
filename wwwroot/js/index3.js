@@ -199,17 +199,17 @@
                 hatT = positions[20][1] >= positions[17][1] ? positions[20][1] - hatRealH * Math.cos(headAngle * Math.PI / 180) : positions[17][1] - hatRealH * 1.1
 
             ARPhoto.global.imgHat.set({
-                x: hatL + hatRealW / 8,
-                y: hatT + hatRealW / 8,
+                x: hatL,
+                y: hatT,
                 scaleX: hatRealW / ARPhoto.global.hatInitW,
                 scaleY: hatRealH / ARPhoto.global.hatInitH,
-                rotation: - headAngle,
-                regX: hatRealW / 2,
-                regY: hatRealH
+                // rotation: - headAngle,
+                // regX: hatRealW / 2,
+                // regY: hatRealH
             })
             ARPhoto.global.traceStage.addChild(ARPhoto.global.imgHat)
             ARPhoto.global.traceStage.update()
-            // ARPhoto.global.ctracker.draw(ARPhoto.global.oTrace)
+            ARPhoto.global.ctracker.draw(ARPhoto.global.oTrace)
         }
     }
 
