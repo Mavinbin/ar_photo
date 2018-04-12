@@ -183,6 +183,7 @@
             ARPhoto.global[elName] = img
             ARPhoto.global[name + 'InitW'] = imgBounds.width
             ARPhoto.global[name + 'InitH'] = imgBounds.height
+            ARPhoto.global.traceStage.addChild(ARPhoto.global[elName])
         }
     }
 
@@ -192,22 +193,30 @@
 
         if (positions) {
             var headW = positions[14][0] - positions[0][0],
-                headAngle = Math.atan((positions[33][0] - positions[62][0]) / (positions[33][1] - positions[62][1])) * 180 / Math.PI,
-                hatRealW = ARPhoto.global.hatInitW / 350 * headW,
-                hatRealH = ARPhoto.global.hatInitH * hatRealW / ARPhoto.global.hatInitW,
-                hatL = positions[33][0] - hatRealW * 340 / ARPhoto.global.hatInitW - hatRealH * Math.sin(headAngle * Math.PI / 180),
-                hatT = positions[20][1] >= positions[17][1] ? positions[20][1] - hatRealH * Math.cos(headAngle * Math.PI / 180) : positions[17][1] - hatRealH * 1.1
+                headAngle = Math.atan((positions[62][0] - positions[33][0]) / (positions[62][1] - positions[33][1])) * 180 / Math.PI,
+                hatRealW = headW / 400 * ARPhoto.global.hatInitW,
+                scale = headW / 400,
+                hatRealH = ARPhoto.global.hatInitH * scale,
+                hatL = (positions[41][0] - 330 / 720 * hatRealW) - hatRealH * (positions[62][0] - positions[33][0]) / (positions[62][1] - positions[33][1]),
+                hatT = positions[21][1] <= positions[17][1] ? positions[21][1] - hatRealH : positions[17][1] - hatRealH
 
             ARPhoto.global.imgHat.set({
-                x: hatL,
-                y: hatT,
-                scaleX: hatRealW / ARPhoto.global.hatInitW,
-                scaleY: hatRealH / ARPhoto.global.hatInitH,
-                // rotation: - headAngle,
-                // regX: hatRealW / 2,
-                // regY: hatRealH
+                x: positions[41][0] * scale + hatL,
+                y: positions[41][1] * scale + hatT,
+                scaleX: scale,
+                scaleY: scale,
+                rotation: - headAngle,
+                regX: positions[41][0],
+                regY: positions[41][1]
             })
-            ARPhoto.global.traceStage.addChild(ARPhoto.global.imgHat)
+
+            ARPhoto.global.traceStage.update()
+            ARPhoto.global.traceStage.addChild(ARPhoto.global.circle)
+            ARPhoto.global.circle.set({
+                x: positions[41][0],
+                y: positions[41][1]
+            })
+
             ARPhoto.global.traceStage.update()
             ARPhoto.global.ctracker.draw(ARPhoto.global.oTrace)
         }
@@ -217,6 +226,8 @@
     ARPhoto.init = function () {
         this.enumerateDevices()
         ARPhoto.initDerections('hat')
+        ARPhoto.global.circle = new createjs.Shape()
+        ARPhoto.global.circle.graphics.beginFill('lightblue').drawCircle(0, 0, 4)
         this.global.glassInitW = ARPhoto.global.oGlass.width
         this.global.glassInitH = ARPhoto.global.oGlass.height
         this.global.shyLineInitW = ARPhoto.global.oShyLine.width
