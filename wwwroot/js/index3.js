@@ -197,17 +197,17 @@
                 hatRealW = headW / 400 * ARPhoto.global.hatInitW,
                 scale = headW / 400,
                 hatRealH = ARPhoto.global.hatInitH * scale,
-                hatL = (positions[41][0] - 330 / 720 * hatRealW) - hatRealH * (positions[62][0] - positions[33][0]) / (positions[62][1] - positions[33][1]),
+                hatL = (positions[41][0] - 330 / 720 * hatRealW) - hatRealH * Math.sin(headAngle * Math.PI / 180),
                 hatT = positions[21][1] <= positions[17][1] ? positions[21][1] - hatRealH : positions[17][1] - hatRealH
 
             ARPhoto.global.imgHat.set({
-                x: positions[41][0] * scale + hatL,
-                y: positions[41][1] * scale + hatT,
+                x: positions[33][0] * scale + hatL,
+                y: positions[33][1] * scale + hatT,
                 scaleX: scale,
                 scaleY: scale,
                 rotation: - headAngle,
-                regX: positions[41][0],
-                regY: positions[41][1]
+                regX: positions[33][0],
+                regY: positions[33][1]
             })
 
             ARPhoto.global.traceStage.update()
@@ -224,7 +224,7 @@
 
     // 初始化
     ARPhoto.init = function () {
-        this.enumerateDevices()
+        // this.enumerateDevices()
         ARPhoto.initDerections('hat')
         ARPhoto.global.circle = new createjs.Shape()
         ARPhoto.global.circle.graphics.beginFill('lightblue').drawCircle(0, 0, 4)
@@ -232,12 +232,12 @@
         this.global.glassInitH = ARPhoto.global.oGlass.height
         this.global.shyLineInitW = ARPhoto.global.oShyLine.width
         this.global.shyLineInitH = ARPhoto.global.oShyLine.height
-        // var timer = setInterval(function () {
-        //     if (ARPhoto.global.oVideo.readyState === ARPhoto.global.oVideo.HAVE_ENOUGH_DATA && ARPhoto.global.oVideo.videoWidth > 0) {
-        //         ARPhoto.initCanvas(ARPhoto.global.oVideo.videoWidth, ARPhoto.global.oVideo.videoHeight)
-        //         clearInterval(timer)
-        //     }
-        // }, 20)
+        var timer = setInterval(function () {
+            if (ARPhoto.global.oVideo.readyState === ARPhoto.global.oVideo.HAVE_ENOUGH_DATA && ARPhoto.global.oVideo.videoWidth > 0) {
+                ARPhoto.initCanvas(ARPhoto.global.oVideo.videoWidth, ARPhoto.global.oVideo.videoHeight)
+                clearInterval(timer)
+            }
+        }, 20)
         ARPhoto.domOperation()
     }
 
