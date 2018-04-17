@@ -7,7 +7,7 @@
         <meta name="keywords" content="">
         <meta name="description" content="">
         <meta name="author" content="Mavinbin(186905) | 2018-04-03">
-        <title>AR照相-3</title>
+        <title>AR照相</title>
         <link href="css/style.css" rel="stylesheet">
         <script src="js/flexible.js"></script>
     </head>
@@ -15,7 +15,7 @@
     <body>
         <div class="container">
             <div id="videoWrap" class="video-wrap">
-                <video id="video" class="video" autoplay playsinline loop></video>
+                <video id="video" class="video" autoplay playsinline src="video/2.mp4"></video>
             </div>
             <div id="traceWrap" class="trace-wrap">
                 <canvas id="trace" class="trace"></canvas>
@@ -27,12 +27,13 @@
                     <a id="btnRedo" class="btn btn-redo iconfont icon-back" href="javascript:;"></a>
                 </div>
             </div>
-            <div id="assets" class="assets"></div>
         </div>
-        <!-- <div id="log" class="log"></div> -->
-        <script src="js/clmtrackr.min.js"></script>
-        <script src="js/easeljs.min.js"></script>
-        <script src="js/index.js"></script>
+        <div id="log" class="log"></div>
+        <script src="js/tracking/tracking-min.js"></script>
+        <script src="js/tracking/data/face-min.js"></script>
+        <script src="js/tracking/data/eye-min.js"></script>
+        <script src="js/tracking/data/mouth-min.js"></script>
+        <script src="js/index1.js"></script>
     </body>
 
 </html>
