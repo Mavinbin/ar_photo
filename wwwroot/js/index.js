@@ -210,16 +210,17 @@
             _this.roleInfo[id].role = img
             _this.roleInfo[id].initW = imgBounds.width
             _this.roleInfo[id].initH = imgBounds.height
-            _this.global.traceStage.addChild(new createjs.Bitmap(_this.global.oVideo))
             _this.global.traceStage.addChild(img)
+            _this.global.traceStage.addChildAt(img, 1)
         }
     }
 
     ARPhoto.drawLoop = function (id) {
         var positions = this.global.ctracker.getCurrentPosition()
+        var score = this.global.ctracker.getScore()
         var requestAnimationFrameId = requestAnimationFrame(this.drawLoop.bind(this, id))
 
-        if (positions) {
+        if (positions && score > 0.2) {
             var headW = positions[13][0] - positions[1][0],
                 headAngle = Math.atan((positions[62][0] - positions[33][0]) / (positions[62][1] - positions[33][1])) * 180 / Math.PI,
                 RoleRealW = headW / this.roleInfo[id].headRate,
@@ -235,8 +236,16 @@
                 scaleY: scale
             })
 
+            if (this.global.isPause) {
+                var img = new createjs.Bitmap(ARPhoto.global.oVideo)
+                this.global.traceStage.addChild(img)
+                this.global.traceStage.addChildAt(img, 0)
+            }
+
             this.global.traceStage.update()
             // this.global.ctracker.draw(this.global.oTrace)
+        } else {
+            this.global.traceStage.clear()
         }
 
         if (this.global.isPause) {
