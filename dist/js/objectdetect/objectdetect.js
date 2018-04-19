@@ -1,1 +1,760 @@
-var objectdetect=function(){"use strict";var r=function(r,a){var t=r.length;a||(a=new Uint32Array(t>>2));for(var e=0;t>e;e+=4)a[e>>2]=4899*r[e]+9617*r[e+1]+1868*r[e+2]+8192>>14;return a},a=function(r,a,t,e,o){var n=t*a,s=~~(a/e),i=~~(t/e);o||(o=new r.constructor(s*t));for(var c=0;s>c;++c)for(var v=c,f=~~(c*e),h=f+n;h>f;f+=a)o[v]=r[f],v+=s;for(var v=0,u=0,l=i*e;l>u;u+=e)for(var f=~~u*s,h=f+s;h>f;++f)o[v]=o[f],++v;return o},t=function(r,a,t,e){e||(e=new r.constructor(r.length));for(var o=0,n=0;t>n;++n){for(var s=a>>1;s>=0;--s){var i=r[o+s];e[o+s]=r[o+a-1-s],e[o+a-1-s]=i}o+=a}return e},e=function(r,a,t,e){var o=r.length;e||(e=new r.constructor(o));for(var n=e===r?new r.constructor(o):e,s=new r.constructor(o),i=2;a-2>i;++i)for(var c=i,v=0;t>v;++v)n[c]=.1117*r[c-2]+.2365*r[c-1]+.3036*r[c]+.2365*r[c+1]+.1117*r[c+2],c+=a;for(var i=0;a>i;++i)for(var c=i+a,v=2;t-2>v;++v)c+=a,s[c]=.1117*n[c-a-a]+.2365*n[c-a]+.3036*n[c]+.2365*n[c+a]+.1117*n[c+a+a];for(var f=Math.abs,i=2;a-2>i;++i)for(var c=i+a,v=2;t-2>v;++v)c+=a,e[c]=f(-s[c-1-a]+s[c+1-a]-2*s[c-1]+2*s[c+1]-s[c-1+a]+s[c+1+a])+f(s[c-1-a]+2*s[c-a]+s[c+1-a]-s[c-1+a]-2*s[c+a]-s[c+1+a]);return e},o=function(r,a,t,e){var o=a+1;e||(e=new Uint32Array(a*t+o+t));for(var n=t*o;n>=0;n-=o)e[n]=0;for(var s=1;a>=s;++s){var i=0,c=s;e[s]=0;for(var v=1;t>=v;++v)i+=r[c-v],c+=o,e[c]=e[c-1]+i}return e},n=function(r,a,t,e){var o=a+1;e||(e=new Uint32Array(a*t+o+t));for(var n=t*o;n>=0;n-=o)e[n]=0;for(var s=1;a>=s;++s){var i=0,c=s;e[s]=0;for(var v=1;t>=v;++v){var f=r[c-v];i+=f*f,c+=o,e[c]=e[c-1]+i}}return e},s=function(r,a,t,e){var o=a+1,n=t*o;e||(e=new Uint32Array(a*t+o+t));for(var s=n;s>=0;s-=o)e[s]=0;for(var s=o-1;s>=0;--s)e[s]=0;for(var i=0,c=0;t>c;++c){for(var v=0;a>v;++v)e[i+o+1]=r[i-c]+e[i],++i;e[i+o]+=e[i],i++}for(var v=a-1;v>0;--v)for(var i=v+n,c=t;c>0;--c)i-=o,e[i+o]+=e[i]+e[i+1];return e},i=function(r,a,t){var e=r.length;t||(t=r),a||(a=5);for(var o=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],n=0;e>n;n+=a)++o[r[n]];for(var s=255*a/e,i=0,n=0;256>n;++n){var c=o[n];i=c+=i,o[n]=c*s}for(var n=0;e>n;++n)t[n]=o[r[n]];return t},c=function(r,a){a||(a=new r.constructor(r));for(var t=r[0],e=1,o=r.length-1;o>e;){++e;for(var n=0,s=r[++e];s>n;++n){if(r[++e])for(var i=e+5*r[++e];i>e;){a[e+1]=t-r[e+1];var c=r[e+3];a[e+3]=r[e+4],a[e+4]=c,e+=5}else for(var i=e+5*r[++e];i>e;)a[e+1]=t-r[e+1]-r[e+3],e+=5;e+=3}}return a},v=function(r,a,t,e,o){a+=1,t+=1,o||(o=new Float32Array(r.length));var n=new Uint32Array(o.buffer);n[0]=r[0],n[1]=r[1];for(var s=1,i=1,c=r.length-1;c>i;){o[++s]=r[++i];for(var v=n[++s]=r[++i],f=0,h=v;h>f;++f){var u=o[++s]=r[++i],l=n[++s]=3*r[++i];if(u)for(var d=s+l;d>s;){var g=r[i+1]+r[i+2]*a,m=r[i+3]*(a+1),y=r[i+4]*(a-1);n[++s]=g,n[++s]=m+(y<<16),o[++s]=r[i+5],i+=5}else for(var d=s+l;d>s;){var g=r[i+1]+r[i+2]*a,b=r[i+3],y=r[i+4]*a;n[++s]=g,n[++s]=b+(y<<16),o[++s]=r[i+5],i+=5}for(var p=r[++i],w=0;l>w;)o[s-w]/=p,w+=3;0>p?(o[s+2]=r[++i],o[s+1]=r[++i],s+=2):(o[++s]=r[++i],o[++s]=r[++i])}}return o.subarray(0,s+1)},f=function(r,a,t,e,o,n,s,i){o+=1,n+=1;for(var c=new Uint32Array(i.buffer),v=c[0],f=c[1],h=f*o,u=v*f,l=1/u,d=o*s,g=[],m=0;o>m+v;m+=s)for(var y=m,b=0;n>b+f;b+=s){var p=y+v,w=y+h,M=w+v,A=!1;if(e){var G=(e[y]-e[p]-e[w]+e[M])*l;if(60>G||G>200){A=!0,y+=d;continue}}for(var S=r[y]-r[p]-r[w]+r[M],j=(t[y]-t[p]-t[w]+t[M])*u-S*S,C=j>1?Math.sqrt(j):1,U=!0,R=1,I=i.length-1;I>R;){for(var q=i[++R],x=0,k=0,F=c[++R];F>k;++k){var T=0;if(c[++R])for(var z=R+c[++R];z>R;){var D=y+c[++R],E=c[++R],H=D+(65535&E),B=D+(E>>16&65535);T+=i[++R]*(a[D]-a[H]-a[B]+a[H+B-D])}else for(var z=R+c[++R];z>R;){var D=y+c[++R],E=c[++R],H=D+(65535&E),B=D+(E>>16&65535);T+=i[++R]*(r[D]-r[H]-r[B]+r[H+B-D])}x+=i[R+(T>C?2:1)],R+=2}if(q>x){U=!1;break}}U&&g.push([m,b,v,f]),y+=d}return g},h=function(r,a,t){var e=r.length;t||(t=1);for(var o=0,n=new Array(e),s=0;s<n.length;++s)n[s]=0;for(var s=0;e>s;++s){for(var i=!1,c=0;s>c;++c){var v=r[s],f=r[c],h=t*(Math.min(v[2],f[2])+Math.min(v[3],f[3]));if(Math.abs(v[0]-f[0])<=h&&Math.abs(v[1]-f[1])<=h&&Math.abs(v[0]+v[2]-f[0]-f[2])<=h&&Math.abs(v[1]+v[3]-f[1]-f[3])<=h){n[s]=n[c],i=!0;break}}i||(n[s]=o++)}for(var u=new Array(o),s=0;o>s;++s)u[s]=[0,0,0,0,0];for(var s=0;e>s;++s){var l=r[s],d=u[n[s]];d[0]+=l[0],d[1]+=l[1],d[2]+=l[2],d[3]+=l[3],++d[4]}for(var s=o-1;s>=0;--s){var g=u[s][4];if(g>=a){var d=u[s];d[0]/=g,d[1]/=g,d[2]/=g,d[3]/=g}else u.splice(s,1)}for(var m=[],s=0;o>s;++s){for(var y=u[s],c=0;o>c;++c)if(s!==c){var b=u[c],p=.2*b[2],w=.2*b[3];if(y[0]>=b[0]-p&&y[1]>=b[1]-w&&y[0]+y[2]<=b[0]+b[2]+p&&y[1]+y[3]<=b[1]+b[3]+w)break}c===o&&m.push(y)}return m},u=function(){function r(r,a,t,e){this.canvas=document.createElement("canvas"),this.canvas.width=r,this.canvas.height=a,this.context=this.canvas.getContext("2d"),this.tilted=e.tilted,this.scaleFactor=t,this.numScales=~~(Math.log(Math.min(r/e[0],a/e[1]))/Math.log(t)),this.scaledGray=new Uint32Array(r*a),this.compiledClassifiers=[];for(var o=1,n=0;n<this.numScales;++n){var s=~~(r/o),i=~~(a/o);this.compiledClassifiers[n]=objectdetect.compileClassifier(e,s,i),o*=t}}return r.prototype.detect=function(r,a,t){t||(t=1);var e=this.canvas.width,o=this.canvas.height;this.context.drawImage(r,0,0,e,o);var n=this.context.getImageData(0,0,e,o).data;this.gray=objectdetect.convertRgbaToGrayscale(n,this.gray);for(var s=[],i=1,c=0;c<this.numScales;++c){var v=~~(e/i),h=~~(o/i);1==i?this.scaledGray.set(this.gray):this.scaledGray=objectdetect.rescaleImage(this.gray,e,o,i,this.scaledGray),this.sat=objectdetect.computeSat(this.scaledGray,v,h,this.sat),this.ssat=objectdetect.computeSquaredSat(this.scaledGray,v,h,this.ssat),this.tilted&&(this.rsat=objectdetect.computeRsat(this.scaledGray,v,h,this.rsat)),this.cannysat=void 0;for(var u=f(this.sat,this.rsat,this.ssat,this.cannysat,v,h,t,this.compiledClassifiers[c]),l=u.length-1;l>=0;--l)u[l][0]*=e/v,u[l][1]*=o/h,u[l][2]*=e/v,u[l][3]*=o/h;s=s.concat(u),i*=this.scaleFactor}return(a?objectdetect.groupRectangles(s,a):s).sort(function(r,a){return a[4]-r[4]})},r}();return{convertRgbaToGrayscale:r,rescaleImage:a,mirrorImage:t,computeCanny:e,equalizeHistogram:i,computeSat:o,computeRsat:s,computeSquaredSat:n,mirrorClassifier:c,compileClassifier:v,detect:f,groupRectangles:h,detector:u}}();
+/**
+ * Real-time object detector based on the Viola Jones Framework.
+ * Compatible to OpenCV Haar Cascade Classifiers (stump based only).
+ * 
+ * Copyright (c) 2012, Martin Tschirsich
+
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+var objectdetect = (function() {
+	"use strict";
+    	
+    var /**
+		 * Converts from a 4-channel RGBA source image to a 1-channel grayscale
+		 * image. Corresponds to the CV_RGB2GRAY OpenCV color space conversion.
+		 * 
+		 * @param {Array} src   4-channel 8-bit source image
+		 * @param {Array} [dst] 1-channel 32-bit destination image
+		 * 
+		 * @return {Array} 1-channel 32-bit destination image
+		 */
+		convertRgbaToGrayscale = function(src, dst) {
+			var srcLength = src.length;
+			if (!dst) dst = new Uint32Array(srcLength >> 2);
+			
+			for (var i = 0; i < srcLength; i += 4) {
+				dst[i >> 2] = (src[i] * 4899 + src[i + 1] * 9617 + src[i + 2] * 1868 + 8192) >> 14;
+			}
+			return dst;
+		},
+		
+		/**
+		 * Reduces the size of a given image by the given factor. Does NOT 
+		 * perform interpolation. If interpolation is required, prefer using
+		 * the drawImage() method of the <canvas> element.
+		 * 
+		 * @param {Array}  src       1-channel source image
+		 * @param {Number} srcWidth	 Width of the source image
+		 * @param {Number} srcHeight Height of the source image
+		 * @param {Number} factor    Scaling down factor (> 1.0)
+		 * @param {Array}  [dst]     1-channel destination image
+		 * 
+		 * @return {Array} 1-channel destination image
+		 */
+		rescaleImage = function(src, srcWidth, srcHeight, factor, dst) {
+			var srcLength = srcHeight * srcWidth,
+				dstWidth = ~~(srcWidth / factor),
+				dstHeight = ~~(srcHeight / factor);
+			
+			if (!dst) dst = new src.constructor(dstWidth * srcHeight);
+			
+			for (var x = 0; x < dstWidth; ++x) {
+				var dstIndex = x;
+				for (var srcIndex = ~~(x * factor), srcEnd = srcIndex + srcLength; srcIndex < srcEnd; srcIndex += srcWidth) {
+					dst[dstIndex] = src[srcIndex];
+					dstIndex += dstWidth;
+				}
+			}
+			
+			var dstIndex = 0;
+			for (var y = 0, yEnd = dstHeight * factor; y < yEnd; y += factor) {
+				for (var srcIndex = ~~(y) * dstWidth, srcEnd=srcIndex + dstWidth; srcIndex < srcEnd; ++srcIndex) {
+					dst[dstIndex] = dst[srcIndex];
+					++dstIndex;
+				}
+			}
+			return dst;
+		},
+		
+		/**
+		 * Horizontally mirrors a 1-channel source image.
+		 * 
+		 * @param {Array}  src       1-channel source image
+		 * @param {Number} srcWidth  Width of the source image
+		 * @param {Number} srcHeight Height of the source image
+		 * @param {Array} [dst]      1-channel destination image
+		 * 
+		 * @return {Array} 1-channel destination image
+		 */
+		mirrorImage = function(src, srcWidth, srcHeight, dst) {
+			if (!dst) dst = new src.constructor(src.length);
+			
+			var index = 0;
+			for (var y = 0; y < srcHeight; ++y) {
+				for (var x = (srcWidth >> 1); x >= 0; --x) {
+					var swap = src[index + x];
+					dst[index + x] = src[index + srcWidth - 1 - x];
+					dst[index + srcWidth - 1 - x] = swap;
+				}
+				index += srcWidth;
+			}
+			return dst;
+		},
+		
+		/**
+		 * Computes the gradient magnitude using a sobel filter after
+		 * applying gaussian smoothing (5x5 filter size). Useful for canny
+		 * pruning.
+		 * 
+		 * @param {Array}  src      1-channel source image
+		 * @param {Number} srcWidth Width of the source image
+		 * @param {Number} srcWidth Height of the source image
+		 * @param {Array}  [dst]    1-channel destination image
+		 * 
+		 * @return {Array} 1-channel destination image
+		 */
+		computeCanny = function(src, srcWidth, srcHeight, dst) {
+			var srcLength = src.length;
+			if (!dst) dst = new src.constructor(srcLength);
+			var buffer1 = dst === src ? new src.constructor(srcLength) : dst;
+			var buffer2 = new src.constructor(srcLength);
+			
+			// Gaussian filter with size=5, sigma=sqrt(2) horizontal pass:
+			for (var x = 2; x < srcWidth - 2; ++x) {
+				var index = x;
+				for (var y = 0; y < srcHeight; ++y) {
+					buffer1[index] =
+						0.1117 * src[index - 2] +
+						0.2365 * src[index - 1] +
+						0.3036 * src[index] +
+						0.2365 * src[index + 1] +
+						0.1117 * src[index + 2];
+					index += srcWidth;
+				}
+			}
+			
+			// Gaussian filter with size=5, sigma=sqrt(2) vertical pass:
+			for (var x = 0; x < srcWidth; ++x) {
+				var index = x + srcWidth;
+				for (var y = 2; y < srcHeight - 2; ++y) {
+					index += srcWidth;
+					buffer2[index] =
+						0.1117 * buffer1[index - srcWidth - srcWidth] +
+						0.2365 * buffer1[index - srcWidth] +
+						0.3036 * buffer1[index] +
+						0.2365 * buffer1[index + srcWidth] +
+						0.1117 * buffer1[index + srcWidth + srcWidth];
+				}
+			}
+			
+			// Compute gradient:
+			var abs = Math.abs;
+			for (var x = 2; x < srcWidth - 2; ++x) {
+				var index = x + srcWidth;
+				for (var y = 2; y < srcHeight - 2; ++y) {
+					index += srcWidth;
+					
+					dst[index] = 
+						abs(-     buffer2[index - 1 - srcWidth]
+							+     buffer2[index + 1 - srcWidth]
+							- 2 * buffer2[index - 1]
+							+ 2 * buffer2[index + 1]
+							-     buffer2[index - 1 + srcWidth]
+							+     buffer2[index + 1 + srcWidth]) +
+						
+						abs(      buffer2[index - 1 - srcWidth]
+							+ 2 * buffer2[index - srcWidth]
+							+     buffer2[index + 1 - srcWidth]
+							-     buffer2[index - 1 + srcWidth]
+							- 2 * buffer2[index + srcWidth]
+							-     buffer2[index + 1 + srcWidth]);
+				}
+			}
+			return dst;
+		},
+
+		/**
+		 * Computes the integral image of a 1-channel image. Arithmetic
+		 * overflow may occur if the integral exceeds the limits for the
+		 * destination image values ([0, 2^32-1] for an unsigned 32-bit image).
+		 * The integral image is 1 pixel wider both in vertical and horizontal
+		 * dimension compared to the source image.
+		 * 
+		 * SAT = Summed Area Table.
+		 * 
+		 * @param {Array}       src       1-channel source image
+		 * @param {Number}      srcWidth  Width of the source image
+		 * @param {Number}      srcHeight Height of the source image
+		 * @param {Uint32Array} [dst]     1-channel destination image
+		 * 
+		 * @return {Uint32Array} 1-channel destination image
+		 */
+		computeSat = function(src, srcWidth, srcHeight, dst) {
+			var dstWidth = srcWidth + 1;
+			
+			if (!dst) dst = new Uint32Array(srcWidth * srcHeight + dstWidth + srcHeight);
+			
+			for (var i = srcHeight * dstWidth; i >= 0; i -= dstWidth)
+				dst[i] = 0;
+			
+			for (var x = 1; x <= srcWidth; ++x) {
+				var column_sum = 0;
+				var index = x;
+				dst[x] = 0;
+				
+				for (var y = 1; y <= srcHeight; ++y) {
+					column_sum += src[index - y];
+					index += dstWidth;
+					dst[index] = dst[index - 1] + column_sum;
+				}
+			}
+			return dst;
+		},
+		
+		/**
+		 * Computes the squared integral image of a 1-channel image.
+		 * @see computeSat()
+		 * 
+		 * @param {Array}       src       1-channel source image
+		 * @param {Number}      srcWidth  Width of the source image
+		 * @param {Number}      srcHeight Height of the source image
+		 * @param {Uint32Array} [dst]     1-channel destination image
+		 * 
+		 * @return {Uint32Array} 1-channel destination image
+		 */
+		computeSquaredSat = function(src, srcWidth, srcHeight, dst) {
+			var dstWidth = srcWidth + 1;
+		
+			if (!dst) dst = new Uint32Array(srcWidth * srcHeight + dstWidth + srcHeight);
+			
+			for (var i = srcHeight * dstWidth; i >= 0; i -= dstWidth)
+				dst[i] = 0;
+			
+			for (var x = 1; x <= srcWidth; ++x) {
+				var column_sum = 0;
+				var index = x;
+				dst[x] = 0;
+				for (var y = 1; y <= srcHeight; ++y) {
+					var val = src[index - y];
+					column_sum += val * val;
+					index += dstWidth;
+					dst[index] = dst[index - 1] + column_sum;
+				}
+			}
+			return dst;
+		},
+		
+		/**
+		 * Computes the rotated / tilted integral image of a 1-channel image.
+		 * @see computeSat()
+		 * 
+		 * @param {Array}       src       1-channel source image
+		 * @param {Number}      srcWidth  Width of the source image
+		 * @param {Number}      srcHeight Height of the source image
+		 * @param {Uint32Array} [dst]     1-channel destination image
+		 * 
+		 * @return {Uint32Array} 1-channel destination image
+		 */
+		computeRsat = function(src, srcWidth, srcHeight, dst) {
+			var dstWidth = srcWidth + 1,
+				srcHeightTimesDstWidth = srcHeight * dstWidth;
+				
+			if (!dst) dst = new Uint32Array(srcWidth * srcHeight + dstWidth + srcHeight);
+			
+			for (var i = srcHeightTimesDstWidth; i >= 0; i -= dstWidth)
+				dst[i] = 0;
+			
+			for (var i = dstWidth - 1; i >= 0; --i)
+				dst[i] = 0;
+			
+			var index = 0;
+			for (var y = 0; y < srcHeight; ++y) {
+				for (var x = 0; x < srcWidth; ++x) {
+					dst[index + dstWidth + 1] = src[index - y] + dst[index];
+					++index;
+				}
+				dst[index + dstWidth] += dst[index];
+				index++;
+			}
+			
+			for (var x = srcWidth - 1; x > 0; --x) {
+				var index = x + srcHeightTimesDstWidth;
+				for (var y = srcHeight; y > 0; --y) {
+					index -= dstWidth;
+					dst[index + dstWidth] += dst[index] + dst[index + 1];
+				}
+			}
+			
+			return dst;
+		},
+		
+		/**
+		 * Equalizes the histogram of an unsigned 1-channel image with integer 
+		 * values in [0, 255]. Corresponds to the equalizeHist OpenCV function.
+		 * 
+		 * @param {Array}  src   1-channel integer source image
+		 * @param {Number} step  Sampling stepsize, increase for performance
+		 * @param {Array}  [dst] 1-channel destination image
+		 * 
+		 * @return {Array} 1-channel destination image
+		 */
+		equalizeHistogram = function(src, step, dst) {
+			var srcLength = src.length;
+			if (!dst) dst = src;
+			if (!step) step = 5;
+			
+			// Compute histogram and histogram sum:
+			var hist = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			            0, 0, 0, 0];
+			
+			for (var i = 0; i < srcLength; i += step) {
+				++hist[src[i]];
+			}
+			
+			// Compute integral histogram:
+			var norm = 255 * step / srcLength,
+				prev = 0;
+			for (var i = 0; i < 256; ++i) {
+				var h = hist[i];
+				prev = h += prev;
+				hist[i] = h * norm; // For non-integer src: ~~(h * norm + 0.5);
+			}
+			
+			// Equalize image:
+			for (var i = 0; i < srcLength; ++i) {
+				dst[i] = hist[src[i]];
+			}
+			return dst;
+		},
+		
+		/**
+		 * Horizontally mirrors a cascase classifier. Useful to detect mirrored
+		 * objects such as opposite hands.
+		 * 
+		 * @param {Array} dst Cascade classifier
+		 * 
+		 * @return {Array} Mirrored cascade classifier
+		 */
+		mirrorClassifier = function(src, dst) {
+			if (!dst) dst = new src.constructor(src);
+			var windowWidth  = src[0];
+			
+			for (var i = 1, iEnd = src.length - 1; i < iEnd; ) {
+				++i;
+				for (var j = 0, jEnd = src[++i]; j < jEnd; ++j) {
+					if (src[++i]) {		
+						// Simple classifier is tilted:
+						for (var kEnd = i + src[++i] * 5; i < kEnd; ) {
+							dst[i + 1] = windowWidth - src[i + 1];
+							var width = src[i + 3];
+							dst[i + 3] = src[i + 4];
+							dst[i + 4] = width;
+							i += 5;
+						}
+					} else {
+						// Simple classifier is not tilted:
+						for (var kEnd = i + src[++i] * 5; i < kEnd; ) {
+							dst[i + 1] = windowWidth - src[i + 1] - src[i + 3];
+							i += 5;
+						}
+					}
+					i += 3;
+				}
+			}
+			return dst;
+		},
+		
+		/**
+		 * Compiles a cascade classifier to be applicable to images
+		 * of given dimensions. Speeds-up the actual detection process later on.
+		 * 
+		 * @param {Array}        src    Cascade classifier
+		 * @param {Number}       width  Width of the source image
+		 * @param {Number}       height Height of the source image
+		 * @param {Float32Array} [dst]  Compiled cascade classifier
+		 * 
+		 * @return {Float32Array} Compiled cascade classifier
+		 */
+		compileClassifier = function(src, width, height, scale, dst) {
+			width += 1;
+			height += 1;
+			if (!dst) dst = new Float32Array(src.length);
+			var dstUint32 = new Uint32Array(dst.buffer);
+			
+			dstUint32[0] = src[0];
+			dstUint32[1] = src[1];
+			var dstIndex = 1;
+			for (var srcIndex = 1, iEnd = src.length - 1; srcIndex < iEnd; ) {
+				dst[++dstIndex] = src[++srcIndex];
+				
+				var numComplexClassifiers = dstUint32[++dstIndex] = src[++srcIndex];
+				for (var j = 0, jEnd = numComplexClassifiers; j < jEnd; ++j) {
+					
+					var tilted = dst[++dstIndex] = src[++srcIndex];
+					var numFeaturesTimes2 = dstUint32[++dstIndex] = src[++srcIndex] * 3;
+					if (tilted) {
+						for (var kEnd = dstIndex + numFeaturesTimes2; dstIndex < kEnd; ) {						
+							var featureOffset = src[srcIndex + 1] + src[srcIndex + 2] * width,
+								featureWidthTimesWidth = src[srcIndex + 3] * (width + 1),
+								featureHeightTimesWidth = src[srcIndex + 4] * (width - 1);
+							
+							dstUint32[++dstIndex] = featureOffset;
+							dstUint32[++dstIndex] = featureWidthTimesWidth + (featureHeightTimesWidth << 16);
+							
+							dst[++dstIndex] = src[srcIndex + 5];
+							srcIndex += 5;
+						}
+					} else {
+						for (var kEnd = dstIndex + numFeaturesTimes2; dstIndex < kEnd; ) {
+							var featureOffset = src[srcIndex + 1] + src[srcIndex + 2] * width,
+								featureWidth = src[srcIndex + 3],
+								featureHeightTimesWidth = src[srcIndex + 4] * width;
+
+							dstUint32[++dstIndex] = featureOffset;
+							dstUint32[++dstIndex] = featureWidth + (featureHeightTimesWidth << 16);
+							dst[++dstIndex] = src[srcIndex + 5];
+							srcIndex += 5;
+						}
+					}
+					var classifierThreshold = src[++srcIndex];
+					for (var k = 0; k < numFeaturesTimes2;) {
+						dst[dstIndex - k] /= classifierThreshold;
+						k += 3;
+					}
+
+					if ((classifierThreshold < 0)) {
+						dst[dstIndex + 2] = src[++srcIndex];
+						dst[dstIndex + 1] = src[++srcIndex];
+						dstIndex += 2;
+					} else {
+						dst[++dstIndex] = src[++srcIndex];
+						dst[++dstIndex] = src[++srcIndex];
+					}
+				}
+			}
+			return dst.subarray(0, dstIndex+1);
+		},
+		
+		/**
+		 * Evaluates a compiled cascade classifier. Sliding window approach.
+		 * 
+		 * @param {Uint32Array}  sat        SAT of the source image
+		 * @param {Uint32Array}  rsat       Rotated SAT of the source image
+		 * @param {Uint32Array}  ssat       Squared SAT of the source image
+		 * @param {Uint32Array}  [cannySat] SAT of the canny source image
+		 * @param {Number}       width      Width of the source image
+		 * @param {Number}       height     Height of the source image
+		 * @param {Number}       step       Stepsize, increase for performance
+		 * @param {Float32Array} classifier Compiled cascade classifier
+		 * 
+		 * @return {Array} Rectangles representing detected objects
+		 */
+		detect = function(sat, rsat, ssat, cannySat, width, height, step, classifier) {
+			width  += 1;
+			height += 1;
+			
+			var classifierUint32 = new Uint32Array(classifier.buffer),
+				windowWidth  = classifierUint32[0],
+				windowHeight = classifierUint32[1],
+				windowHeightTimesWidth = windowHeight * width,
+				area = windowWidth * windowHeight,
+				inverseArea = 1 / area,
+				widthTimesStep = width * step,
+				rects = [];
+			
+			for (var x = 0; x + windowWidth < width; x += step) {
+				var satIndex = x;
+				for (var y = 0; y + windowHeight < height; y += step) {					
+					var satIndex1 = satIndex + windowWidth,
+						satIndex2 = satIndex + windowHeightTimesWidth,
+						satIndex3 = satIndex2 + windowWidth,
+						canny = false;
+
+					// Canny test:
+					if (cannySat) {
+						var edgesDensity = (cannySat[satIndex] -
+											cannySat[satIndex1] -
+											cannySat[satIndex2] +
+											cannySat[satIndex3]) * inverseArea;
+						if (edgesDensity < 60 || edgesDensity > 200) {
+							canny = true;
+							satIndex += widthTimesStep;
+							continue;
+						}
+					}
+					
+					// Normalize mean and variance of window area:
+					var mean = (sat[satIndex] -
+							    sat[satIndex1] -
+						        sat[satIndex2] +
+						        sat[satIndex3]),
+						
+						variance = (ssat[satIndex] -
+						            ssat[satIndex1] -
+						            ssat[satIndex2] +
+						            ssat[satIndex3]) * area - mean * mean,
+						            
+						std = variance > 1 ? Math.sqrt(variance) : 1,
+						found = true;
+					
+					// Evaluate cascade classifier aka 'stages':
+					for (var i = 1, iEnd = classifier.length - 1; i < iEnd; ) {
+						var complexClassifierThreshold = classifier[++i];
+						// Evaluate complex classifiers aka 'trees':
+						var complexClassifierSum = 0;
+						for (var j = 0, jEnd = classifierUint32[++i]; j < jEnd; ++j) {
+							
+							// Evaluate simple classifiers aka 'nodes':
+							var simpleClassifierSum = 0;
+							
+							if (classifierUint32[++i]) {
+								// Simple classifier is tilted:
+								for (var kEnd = i + classifierUint32[++i]; i < kEnd; ) {
+									var f1 = satIndex + classifierUint32[++i],
+										packed = classifierUint32[++i],
+										f2 = f1 + (packed & 0xFFFF),
+										f3 = f1 + (packed >> 16 & 0xFFFF);
+									
+									simpleClassifierSum += classifier[++i] *
+										(rsat[f1] - rsat[f2] - rsat[f3] + rsat[f2 + f3 - f1]);
+								}
+							} else {
+								// Simple classifier is not tilted:
+								for (var kEnd = i + classifierUint32[++i]; i < kEnd; ) {
+									var f1 = satIndex + classifierUint32[++i],
+										packed = classifierUint32[++i],
+										f2 = f1 + (packed & 0xFFFF),
+										f3 = f1 + (packed >> 16 & 0xFFFF);
+									
+									simpleClassifierSum += classifier[++i] *
+										(sat[f1] - sat[f2] - sat[f3] + sat[f2 + f3 - f1]);
+								}
+							}
+							complexClassifierSum += classifier[i + (simpleClassifierSum > std ? 2 : 1)];
+							i += 2;
+						}
+						if (complexClassifierSum < complexClassifierThreshold) {
+							found = false;
+							break;
+						}
+					}
+					if (found) rects.push([x, y, windowWidth, windowHeight]);
+					satIndex += widthTimesStep;
+				}
+			}
+			return rects;
+		},
+	    
+		/**
+		 * Groups rectangles together using a rectilinear distance metric. For
+		 * each group of related rectangles, a representative mean rectangle
+		 * is returned.
+		 * 
+		 * @param {Array}  rects        Rectangles (Arrays of 4 floats)
+		 * @param {Number} minNeighbors
+		 *  
+		 * @return {Array} Mean rectangles (Arrays of 4 floats)
+		 */
+		groupRectangles = function(rects, minNeighbors, confluence) {
+			var rectsLength = rects.length;
+			if (!confluence) confluence = 1.0;
+			
+	    	// Partition rects into similarity classes:
+	    	var numClasses = 0;
+	    	var labels = new Array(rectsLength);
+			for (var i = 0; i < labels.length; ++i) {
+				labels[i] = 0;
+			}
+			
+			for (var i = 0; i < rectsLength; ++i) {
+				var found = false;
+				for (var j = 0; j < i; ++j) {
+					
+					// Determine similarity:
+					var rect1 = rects[i];
+					var rect2 = rects[j];
+			        var delta = confluence * (Math.min(rect1[2], rect2[2]) + Math.min(rect1[3], rect2[3]));
+			        if (Math.abs(rect1[0] - rect2[0]) <= delta &&
+			        	Math.abs(rect1[1] - rect2[1]) <= delta &&
+			        	Math.abs(rect1[0] + rect1[2] - rect2[0] - rect2[2]) <= delta &&
+			        	Math.abs(rect1[1] + rect1[3] - rect2[1] - rect2[3]) <= delta) {
+						
+						labels[i] = labels[j];
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
+					labels[i] = numClasses++;
+				}
+			}
+			
+			// Compute average rectangle (group) for each cluster:
+			var groups = new Array(numClasses);
+			
+			for (var i = 0; i < numClasses; ++i) {
+				groups[i] = [0, 0, 0, 0, 0];
+			}
+			
+			for (var i = 0; i < rectsLength; ++i) {
+				var rect = rects[i],
+					group = groups[labels[i]];
+				group[0] += rect[0];
+				group[1] += rect[1];
+				group[2] += rect[2];
+				group[3] += rect[3];
+				++group[4];
+			}
+			
+			for (var i = numClasses - 1; i >= 0; --i) {
+				var numNeighbors = groups[i][4];
+				if (numNeighbors >= minNeighbors) {
+					var group = groups[i];
+					group[0] /= numNeighbors;
+					group[1] /= numNeighbors;
+					group[2] /= numNeighbors;
+					group[3] /= numNeighbors;
+				} else groups.splice(i, 1);
+			}
+			
+			// Filter out small rectangles inside larger rectangles:
+			var filteredGroups = [];
+			for (var i = 0; i < numClasses; ++i) {
+		        var r1 = groups[i];
+		        
+		        for (var j = 0; j < numClasses; ++j) {
+		        	if (i === j) continue;
+		            var r2 = groups[j];
+		            var dx = r2[2] * 0.2;
+		            var dy = r2[3] * 0.2;
+		            
+		            if (r1[0] >= r2[0] - dx &&
+		                r1[1] >= r2[1] - dy &&
+		                r1[0] + r1[2] <= r2[0] + r2[2] + dx &&
+		                r1[1] + r1[3] <= r2[1] + r2[3] + dy) {
+		            	break;
+		            }
+		        }
+		        
+		        if (j === numClasses) {
+		        	filteredGroups.push(r1);
+		        }
+		    }
+			return filteredGroups;
+		};
+	
+	var detector = (function() {
+		
+		/**
+		 * Creates a new detector - basically a convenient wrapper class around
+		 * the js-objectdetect functions and hides away the technical details
+		 * of multi-scale object detection on image, video or canvas elements.
+		 * 
+		 * @param width       Width of the detector
+		 * @param height      Height of the detector
+		 * @param scaleFactor Scaling factor for multi-scale detection
+		 * @param classifier  Compiled cascade classifier
+		 */
+		function detector(width, height, scaleFactor, classifier) {
+			this.canvas = document.createElement('canvas');
+			this.canvas.width = width;
+			this.canvas.height = height;
+			this.context = this.canvas.getContext('2d');
+			this.tilted = classifier.tilted;
+			this.scaleFactor = scaleFactor;
+			this.numScales = ~~(Math.log(Math.min(width / classifier[0], height / classifier[1])) / Math.log(scaleFactor));
+			this.scaledGray = new Uint32Array(width * height);
+			this.compiledClassifiers = [];
+			var scale = 1;
+			for (var i = 0; i < this.numScales; ++i) {
+				var scaledWidth = ~~(width / scale);
+				var scaledHeight = ~~(height / scale);
+				this.compiledClassifiers[i] = objectdetect.compileClassifier(classifier, scaledWidth, scaledHeight);
+				scale *= scaleFactor;
+			}
+		}
+		
+		/**
+		 * Multi-scale object detection on image, video or canvas elements. 
+		 * 
+		 * @param image          HTML image, video or canvas element
+		 * @param [group]        Detection results will be grouped by proximity
+		 * @param [stepSize]     Increase for performance
+		 * 
+		 * @return Grouped rectangles
+		 */
+		detector.prototype.detect = function(image, group, stepSize) {
+			if (!stepSize) stepSize = 1;
+			
+			var width = this.canvas.width;
+			var height = this.canvas.height;
+			
+			this.context.drawImage(image, 0, 0, width, height);
+			var imageData = this.context.getImageData(0, 0, width, height).data;
+			this.gray = objectdetect.convertRgbaToGrayscale(imageData, this.gray);
+			
+			var rects = [];
+			var scale = 1;
+			for (var i = 0; i < this.numScales; ++i) {
+				var scaledWidth = ~~(width / scale);
+				var scaledHeight = ~~(height / scale);
+				
+				if (scale == 1) {
+					this.scaledGray.set(this.gray);
+				} else {
+					this.scaledGray = objectdetect.rescaleImage(this.gray, width, height, scale, this.scaledGray);
+				}
+				
+				this.sat = objectdetect.computeSat(this.scaledGray, scaledWidth, scaledHeight, this.sat);
+				this.ssat = objectdetect.computeSquaredSat(this.scaledGray, scaledWidth, scaledHeight, this.ssat);
+				if (this.tilted) this.rsat = objectdetect.computeRsat(this.scaledGray, scaledWidth, scaledHeight, this.rsat);
+				this.cannysat = undefined;
+
+				var newRects = detect(this.sat, this.rsat, this.ssat, this.cannysat, scaledWidth, scaledHeight, stepSize, this.compiledClassifiers[i]);
+				for (var j = newRects.length - 1; j >= 0; --j) {
+					newRects[j][0] *= width / scaledWidth;
+					newRects[j][1] *= height / scaledHeight;
+					newRects[j][2] *= width / scaledWidth;
+					newRects[j][3] *= height / scaledHeight;
+				}
+				rects = rects.concat(newRects);
+				
+				scale *= this.scaleFactor;
+			}				
+			return (group ? objectdetect.groupRectangles(rects, group) : rects).sort(function(r1, r2) {return r2[4] - r1[4];});
+		};
+		
+		return detector;
+	})();
+	
+	return {
+		convertRgbaToGrayscale: convertRgbaToGrayscale,
+		rescaleImage: rescaleImage,
+		mirrorImage: mirrorImage,
+		computeCanny: computeCanny,
+		equalizeHistogram: equalizeHistogram,
+		computeSat: computeSat,
+		computeRsat: computeRsat,
+		computeSquaredSat: computeSquaredSat,
+		mirrorClassifier: mirrorClassifier,
+		compileClassifier: compileClassifier,
+		detect: detect,
+		groupRectangles: groupRectangles,
+		detector: detector
+	};
+})();
