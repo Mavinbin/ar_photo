@@ -70,6 +70,7 @@
         oBtnRedo.addEventListener('click', function () {
             ARPhoto.global.isPause = false
             ARPhoto.global.oVideo.play()
+            ARPhoto.global.draw()
             oResultBtns.classList.remove('active')
             oTraceBtns.classList.add('active')
         })
@@ -218,7 +219,6 @@
     ARPhoto.init = function () {
         var _this = this
         _this.enumerateDevices()
-        // createjs.Ticker.addEventListener('tick', ARPhoto.global.traceStage);
         // var timer = setInterval(function () {
         //     if (_this.global.oVideo.readyState === _this.global.oVideo.HAVE_ENOUGH_DATA && _this.global.oVideo.videoWidth > 0) {
         //         _this.initCanvas(_this.global.oVideo.videoWidth, _this.global.oVideo.videoHeight)
