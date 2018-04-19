@@ -198,7 +198,7 @@
     // init
     ARPhoto.init = function () {
         var _this = this
-        // _this.enumerateDevices()
+        _this.enumerateDevices()
         createjs.Ticker.addEventListener('tick', ARPhoto.global.traceStage);
         // var timer = setInterval(function () {
         //     if (_this.global.oVideo.readyState === _this.global.oVideo.HAVE_ENOUGH_DATA && _this.global.oVideo.videoWidth > 0) {
