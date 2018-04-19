@@ -188,7 +188,7 @@
         if (this.global.isPause) {
             var img = new createjs.Bitmap(ARPhoto.global.oVideo)
             this.global.traceStage.addChild(img)
-            this.global.traceStage.addChildAt(img, 0)
+            // this.global.traceStage.addChildAt(img, 0)
             alert(img)
         }
 
