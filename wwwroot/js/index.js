@@ -43,6 +43,7 @@
         oBtnShuffer.addEventListener('click', function () {
             ARPhoto.global.isPause = true
             ARPhoto.global.oVideo.pause()
+            ARPhoto.draw()
             oTraceBtns.classList.remove('active')
             oResultBtns.classList.add('active')
         })
@@ -175,7 +176,7 @@
             roleRealW = window.innerWidth,
             roleRealH = this.roleInfo.initH * scale,
             roleL = (this.global.oVideo.videoWidth - window.innerWidth) / 2,
-            roleT = window.innerHeight - roleRealH
+            roleT = 0
 
         this.roleInfo.role.set({
             x: roleL,
@@ -197,7 +198,7 @@
     ARPhoto.init = function () {
         var _this = this
         _this.enumerateDevices()
-        createjs.Ticker.addEventListener("tick", ARPhoto.global.traceStage);
+        createjs.Ticker.addEventListener('tick', ARPhoto.global.traceStage);
         // var timer = setInterval(function () {
         //     if (_this.global.oVideo.readyState === _this.global.oVideo.HAVE_ENOUGH_DATA && _this.global.oVideo.videoWidth > 0) {
         //         _this.initCanvas(_this.global.oVideo.videoWidth, _this.global.oVideo.videoHeight)
