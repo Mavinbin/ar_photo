@@ -20,6 +20,25 @@
 
     ARPhoto.roleInfo = {}
 
+    ARPhoto.requestAnimationFrame = function (callback, element) {
+        var requestAnimationFrame =
+            window.requestAnimationFrame ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame ||
+            window.oRequestAnimationFrame ||
+            function (callback, element) {
+                var currTime = new Date().getTime();
+                var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+                var id = window.setTimeout(function () {
+                    callback(currTime + timeToCall);
+                }, timeToCall);
+                lastTime = currTime + timeToCall;
+                return id;
+            };
+
+        return requestAnimationFrame.call(window, callback, element);
+    }
+
     // get the param from URL
     ARPhoto.getUrlParam = function (name) {
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"),
@@ -43,7 +62,6 @@
         oBtnShuffer.addEventListener('click', function () {
             ARPhoto.global.isPause = true
             ARPhoto.global.oVideo.pause()
-            ARPhoto.draw()
             oTraceBtns.classList.remove('active')
             oResultBtns.classList.add('active')
         })
@@ -178,6 +196,7 @@
             roleL = (this.global.oVideo.videoWidth - window.innerWidth) / 2,
             roleT = 0
 
+        var loop = this.requestAnimationFrame(ARPhoto.draw.bind(this))
         this.roleInfo.role.set({
             x: roleL,
             y: roleT,
@@ -188,8 +207,8 @@
         if (this.global.isPause) {
             var img = new createjs.Bitmap(ARPhoto.global.oVideo)
             this.global.traceStage.addChild(img)
-            // this.global.traceStage.addChildAt(img, 0)
-            alert(img)
+            this.global.traceStage.addChildAt(img, 0)
+            cancelAnimationFrame(loop)
         }
 
         this.global.traceStage.update()
@@ -199,7 +218,7 @@
     ARPhoto.init = function () {
         var _this = this
         _this.enumerateDevices()
-        createjs.Ticker.addEventListener('tick', ARPhoto.global.traceStage);
+        // createjs.Ticker.addEventListener('tick', ARPhoto.global.traceStage);
         // var timer = setInterval(function () {
         //     if (_this.global.oVideo.readyState === _this.global.oVideo.HAVE_ENOUGH_DATA && _this.global.oVideo.videoWidth > 0) {
         //         _this.initCanvas(_this.global.oVideo.videoWidth, _this.global.oVideo.videoHeight)
