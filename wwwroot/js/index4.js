@@ -4,7 +4,6 @@
 (function () {
     var ARPhoto = {}
 
-    // global object
     ARPhoto.global = {
         oTraceWrap: document.getElementById('traceWrap'),
         oVideo: document.getElementById('video'),
@@ -18,9 +17,6 @@
         isPause: false
     }
 
-    ARPhoto.roleInfo = {}
-
-    // get the param from URL
     ARPhoto.getUrlParam = function (name) {
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"),
             r = window.location.search.substr(1).match(reg)
@@ -32,31 +28,65 @@
         }
     }
 
-    // dom operation
+    ARPhoto.roleInfo = {
+        1: {
+            headRate: 60 / 720,
+            headLRate: 348 / 720,
+            headTRate: 312 / 911
+        },
+        2: {
+            headRate: 55 / 720,
+            headLRate: 355 / 720,
+            headTRate: 304 / 1018
+        }
+    }
+
+    ARPhoto.requestAnimationFrame = function (callback, element) {
+        var requestAnimationFrame =
+            window.requestAnimationFrame ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame ||
+            window.oRequestAnimationFrame ||
+            function (callback, element) {
+                var currTime = new Date().getTime();
+                var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+                var id = window.setTimeout(function () {
+                    callback(currTime + timeToCall);
+                }, timeToCall);
+                lastTime = currTime + timeToCall;
+                return id;
+            };
+
+        return requestAnimationFrame.call(window, callback, element);
+    }
+
+    // dom操作
     ARPhoto.domOperation = function () {
         var oBtnShuffer = document.getElementById('btnShutter'),
             oBtnRedo = document.getElementById('btnRedo'),
             oTraceBtns = document.getElementById('traceBtns'),
             oResultBtns = document.getElementById('resultBtns')
 
-        // click to take a photo
+        // 点击拍照
         oBtnShuffer.addEventListener('click', function () {
             ARPhoto.global.isPause = true
             ARPhoto.global.oVideo.pause()
+            ARPhoto.global.ctracker.stop()
             oTraceBtns.classList.remove('active')
             oResultBtns.classList.add('active')
         })
 
-        // click to redo taking a photo
+        // 点击重新拍照
         oBtnRedo.addEventListener('click', function () {
             ARPhoto.global.isPause = false
             ARPhoto.global.oVideo.play()
+            ARPhoto.global.ctracker.start(ARPhoto.global.oVideo)
+            ARPhoto.drawLoop(ARPhoto.getUrlParam('id'))
             oResultBtns.classList.remove('active')
             oTraceBtns.classList.add('active')
         })
     }
 
-    // print debug infomation in screen
     ARPhoto.log = function (msg) {
         var oLog = document.getElementById('log'),
             oSpan = document.createElement('span'),
@@ -67,7 +97,7 @@
         console.log(msg)
     }
 
-    // detect mobile system
+    // 检测手机系统
     ARPhoto.getSystem = function () {
         var u = navigator.userAgent
         var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1
@@ -80,7 +110,7 @@
         }
     }
 
-    // query all audio and video devices
+    // 遍历设备的所有音频和摄像头设备
     ARPhoto.enumerateDevices = function () {
         var _this = this
         var constraints = {
@@ -112,7 +142,7 @@
         }
     }
 
-    // request to open the camera
+    // 调用摄像头
     ARPhoto.getUserMedia = function (constraints) {
         var _this = this
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -124,7 +154,6 @@
                 var timer = setInterval(function () {
                     if (_this.global.oVideo.videoWidth) {
                         _this.initCanvas(_this.global.oVideo.videoWidth, _this.global.oVideo.videoHeight)
-                        _this.initAssets()
                         clearInterval(timer)
                     }
                 }, 20)
@@ -141,67 +170,97 @@
         }
     }
 
-    // adjust canvas width and height to match with video
+    // 调整canvas的宽高与视频一致
     ARPhoto.initCanvas = function (w, h) {
         this.global.oVideo.setAttribute('width', w)
         this.global.oVideo.setAttribute('height', h)
         this.global.oTrace.setAttribute('width', w)
         this.global.oTrace.setAttribute('height', h)
+        this.global.oAssets.style.width = w + 'px'
+        this.global.oAssets.style.height = h + 'px'
+        this.global.canvasW = w
+        this.global.canvasH = h
+        this.track()
     }
 
-    // add role image and init
-    ARPhoto.initAssets = function () {
+    // 人脸识别
+    ARPhoto.track = function () {
+        this.global.ctracker = new clm.tracker()
+        this.global.ctracker.init()
+        this.global.ctracker.start(this.global.oVideo)
+        this.drawLoop(this.getUrlParam('id'))
+    }
+
+    // 初始化图片
+    ARPhoto.initAssets = function (id, attachName) {
         var _this = this
         var _img = new Image()
 
-        _img.src = 'img/role_' + this.getUrlParam('id') + '.png'
+
+        if (!attachName) {
+            _img.src = 'img/role_' + id + '.png'
+        } else {
+            _img.src = 'img/role_' + id + '_' + attachName + '.png'
+        }
 
         _img.onload = function () {
             var img = new createjs.Bitmap(_img.src),
                 imgBounds = img.getBounds()
 
-            _this.roleInfo.role = img
-            _this.roleInfo.initW = imgBounds.width
-            _this.roleInfo.initH = imgBounds.height
+            _this.roleInfo[id].role = img
+            _this.roleInfo[id].initW = imgBounds.width
+            _this.roleInfo[id].initH = imgBounds.height
             _this.global.traceStage.addChild(img)
             _this.global.traceStage.addChildAt(img, 1)
-            _this.draw()
         }
     }
 
-    // canvas drawing loop
-    ARPhoto.draw = function () {
-        var scale = window.innerWidth / this.roleInfo.initW,
-            roleRealW = window.innerWidth,
-            roleRealH = this.roleInfo.initH * scale,
-            roleL = (this.global.oVideo.videoWidth - window.innerWidth) / 2,
-            roleT = window.innerHeight - roleRealH
+    ARPhoto.drawLoop = function (id) {
+        var positions = this.global.ctracker.getCurrentPosition()
+        var score = this.global.ctracker.getScore()
+        var requestAnimationFrameId = requestAnimationFrame(this.drawLoop.bind(this, id))
 
-        this.roleInfo.role.set({
-            x: roleL,
-            y: roleT,
-            scaleX: scale,
-            scaleY: scale
-        })
+        if (positions && score > 0.2) {
+            var headW = positions[13][0] - positions[1][0],
+                headAngle = Math.atan((positions[62][0] - positions[33][0]) / (positions[62][1] - positions[33][1])) * 180 / Math.PI,
+                RoleRealW = headW / this.roleInfo[id].headRate,
+                scale = RoleRealW / this.roleInfo[id].initW,
+                RoleRealH = this.roleInfo[id].initH * scale,
+                RoleL = positions[1][0] - RoleRealW * this.roleInfo[id].headLRate,
+                RoleT = positions[7][1] - RoleRealH * this.roleInfo[id].headTRate
+
+            this.roleInfo[id].role.set({
+                x: RoleL,
+                y: RoleT,
+                scaleX: scale,
+                scaleY: scale
+            })
+
+            if (this.global.isPause) {
+                var img = new createjs.Bitmap(ARPhoto.global.oVideo)
+                this.global.traceStage.addChild(img)
+                this.global.traceStage.addChildAt(img, 0)
+            }
+
+            this.global.traceStage.update()
+            // this.global.ctracker.draw(this.global.oTrace)
+        } else {
+            this.global.traceStage.clear()
+        }
 
         if (this.global.isPause) {
-            var img = new createjs.Bitmap(ARPhoto.global.oVideo)
-            this.global.traceStage.addChild(img)
-            this.global.traceStage.addChildAt(img, 0)
+            cancelAnimationFrame(requestAnimationFrameId)
         }
-
-        this.global.traceStage.update()
     }
 
-    // init
+    // 初始化
     ARPhoto.init = function () {
         var _this = this
         _this.enumerateDevices()
-        createjs.Ticker.addEventListener("tick", ARPhoto.global.traceStage);
+        this.initAssets(this.getUrlParam('id'))
         // var timer = setInterval(function () {
         //     if (_this.global.oVideo.readyState === _this.global.oVideo.HAVE_ENOUGH_DATA && _this.global.oVideo.videoWidth > 0) {
         //         _this.initCanvas(_this.global.oVideo.videoWidth, _this.global.oVideo.videoHeight)
-        //         _this.initAssets()
         //         clearInterval(timer)
         //     }
         // }, 20)
