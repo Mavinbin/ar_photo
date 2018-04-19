@@ -70,7 +70,7 @@
         oBtnRedo.addEventListener('click', function () {
             ARPhoto.global.isPause = false
             ARPhoto.global.oVideo.play()
-            ARPhoto.global.draw()
+            ARPhoto.draw()
             oResultBtns.classList.remove('active')
             oTraceBtns.classList.add('active')
         })
