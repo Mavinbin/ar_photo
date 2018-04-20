@@ -36,13 +36,12 @@
     height: 100%;
 }
 
-.video-wrap .video,
-.decorations {
+.video-wrap .video{
     position: absolute;
     left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%);
-    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scaleX(-1);
+    -webkit-transform: translate(-50%, -50%) scaleX(-1);
 }
 
 .trace-wrap {

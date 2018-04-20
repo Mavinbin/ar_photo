@@ -2,20 +2,12 @@
 
 ;
 (function () {
-    var ARPhoto = {}
-
-    // global object
-    ARPhoto.global = {
-        oTraceWrap: document.getElementById('traceWrap'),
-        oVideo: document.getElementById('video'),
-        oTrace: document.getElementById('trace'),
-        traceCtx: document.getElementById('trace').getContext('2d'),
-        traceStage: new createjs.Stage('trace'),
-        canvasW: document.documentElement.clientWidth,
-        canvasH: document.documentElement.clientHeight,
-        requestAnimationFrameId: null,
-        isPause: false
-    }
+    var ARPhoto = {},
+        oVideo = document.getElementById('video'),
+        oTrace = document.getElementById('trace'),
+        traceCtx = document.getElementById('trace').getContext('2d'),
+        traceStage = new createjs.Stage('trace'),
+        isPause = false
 
     ARPhoto.roleInfo = {}
 
@@ -59,16 +51,16 @@
 
         // click to take a photo
         oBtnShuffer.addEventListener('click', function () {
-            ARPhoto.global.isPause = true
-            ARPhoto.global.oVideo.pause()
+            isPause = true
+            oVideo.pause()
             oTraceBtns.classList.remove('active')
             oResultBtns.classList.add('active')
         })
 
         // click to redo taking a photo
         oBtnRedo.addEventListener('click', function () {
-            ARPhoto.global.isPause = false
-            ARPhoto.global.oVideo.play()
+            isPause = false
+            oVideo.play()
             ARPhoto.draw()
             oResultBtns.classList.remove('active')
             oTraceBtns.classList.add('active')
@@ -136,13 +128,13 @@
         var _this = this
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
-                _this.global.oVideo.srcObject = stream
+                oVideo.srcObject = stream
                 document.body.addEventListener('click', function () {
-                    _this.global.oVideo.play()
+                    oVideo.play()
                 })
                 var timer = setInterval(function () {
-                    if (_this.global.oVideo.videoWidth) {
-                        _this.initCanvas(_this.global.oVideo.videoWidth, _this.global.oVideo.videoHeight)
+                    if (oVideo.videoWidth) {
+                        _this.initCanvas(oVideo.videoWidth, oVideo.videoHeight)
                         _this.initAssets()
                         clearInterval(timer)
                     }
@@ -162,10 +154,10 @@
 
     // adjust canvas width and height to match with video
     ARPhoto.initCanvas = function (w, h) {
-        this.global.oVideo.setAttribute('width', w)
-        this.global.oVideo.setAttribute('height', h)
-        this.global.oTrace.setAttribute('width', w)
-        this.global.oTrace.setAttribute('height', h)
+        oVideo.setAttribute('width', w)
+        oVideo.setAttribute('height', h)
+        oTrace.setAttribute('width', w)
+        oTrace.setAttribute('height', h)
     }
 
     // add role image and init
@@ -182,8 +174,8 @@
             _this.roleInfo.role = img
             _this.roleInfo.initW = imgBounds.width
             _this.roleInfo.initH = imgBounds.height
-            _this.global.traceStage.addChild(img)
-            _this.global.traceStage.addChildAt(img, 1)
+            traceStage.addChild(img)
+            traceStage.addChildAt(img, 1)
             _this.draw()
         }
     }
@@ -193,7 +185,7 @@
         var scale = window.innerWidth / this.roleInfo.initW,
             roleRealW = window.innerWidth,
             roleRealH = this.roleInfo.initH * scale,
-            roleL = (this.global.oVideo.videoWidth - window.innerWidth) / 2,
+            roleL = (oVideo.videoWidth - window.innerWidth) / 2,
             roleT = 0
 
         var loop = this.requestAnimationFrame(ARPhoto.draw.bind(this))
@@ -204,14 +196,23 @@
             scaleY: scale
         })
 
-        if (this.global.isPause) {
-            var img = new createjs.Bitmap(ARPhoto.global.oVideo)
-            this.global.traceStage.addChild(img)
-            this.global.traceStage.addChildAt(img, 0)
+        if (isPause) {
+            var img = new createjs.Bitmap(oVideo)
+            img.set({
+                x: oVideo.videoWidth,
+                scaleX: -1
+            })
+            traceStage.addChild(img)
+            traceStage.addChildAt(img, 0)
             cancelAnimationFrame(loop)
         }
 
-        this.global.traceStage.update()
+        traceStage.update()
+
+        if (isPause) {
+            var URI = oTrace.toDataURL("image/jpeg");
+            console.log(URI)
+        }
     }
 
     // init
@@ -219,8 +220,8 @@
         var _this = this
         _this.enumerateDevices()
         // var timer = setInterval(function () {
-        //     if (_this.global.oVideo.readyState === _this.global.oVideo.HAVE_ENOUGH_DATA && _this.global.oVideo.videoWidth > 0) {
-        //         _this.initCanvas(_this.global.oVideo.videoWidth, _this.global.oVideo.videoHeight)
+        //     if (oVideo.readyState === oVideo.HAVE_ENOUGH_DATA && oVideo.videoWidth > 0) {
+        //         _this.initCanvas(oVideo.videoWidth, oVideo.videoHeight)
         //         _this.initAssets()
         //         clearInterval(timer)
         //     }
