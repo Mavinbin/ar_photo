@@ -9,7 +9,6 @@
         oTraceWrap: document.getElementById('traceWrap'),
         oVideo: document.getElementById('video'),
         oTrace: document.getElementById('trace'),
-        oAssets: document.getElementById('assets'),
         traceCtx: document.getElementById('trace').getContext('2d'),
         traceStage: new createjs.Stage('trace'),
         canvasW: document.documentElement.clientWidth,
