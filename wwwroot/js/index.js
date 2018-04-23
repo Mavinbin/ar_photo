@@ -46,8 +46,7 @@
     ARPhoto.domOperation = function () {
         var oBtnShuffer = document.getElementById('btnShutter'),
             oBtnRedo = document.getElementById('btnRedo'),
-            oTraceBtns = document.getElementById('traceBtns'),
-            oResultBtns = document.getElementById('resultBtns')
+            oBtnShareFB = document.getElementById('btnShareFB')
 
         // click to take a photo
         oBtnShuffer.addEventListener('click', function () {
@@ -65,17 +64,11 @@
             oResultBtns.classList.remove('active')
             oTraceBtns.classList.add('active')
         })
-    }
 
-    // print debug infomation in screen
-    ARPhoto.log = function (msg) {
-        var oLog = document.getElementById('log'),
-            oSpan = document.createElement('span'),
-            oMsg = document.createTextNode(msg)
-
-        oSpan.appendChild(oMsg)
-        oLog.appendChild(oSpan)
-        console.log(msg)
+        // click to share to facebook
+        oBtnShareFB.addEventListener('click', function () {
+            ARPhoto.share()
+        })
     }
 
     // detect mobile system
@@ -119,7 +112,7 @@
                 alert(err)
             })
         } else {
-            alert('您的设备不支持摄像头调用！')
+            alert('Oops :( this browser does not support camera calls')
         }
     }
 
@@ -148,7 +141,7 @@
                 }
             })
         } else {
-            alert('您的设备不支持摄像头调用！')
+            alert('Oops :( this browser does not support camera calls')
         }
     }
 
@@ -208,17 +201,17 @@
         }
 
         traceStage.update()
+    }
 
-        if (isPause) {
-            var URI = oTrace.toDataURL("image/jpeg");
-            console.log(URI)
-        }
+    // share
+    ARPhoto.share = function () {
+        var URI = oTrace.toDataURL("image/jpeg");
     }
 
     // init
     ARPhoto.init = function () {
-        var _this = this
-        _this.enumerateDevices()
+        // var _this = this
+        this.enumerateDevices()
         // var timer = setInterval(function () {
         //     if (oVideo.readyState === oVideo.HAVE_ENOUGH_DATA && oVideo.videoWidth > 0) {
         //         _this.initCanvas(oVideo.videoWidth, oVideo.videoHeight)
@@ -226,7 +219,7 @@
         //         clearInterval(timer)
         //     }
         // }, 20)
-        _this.domOperation()
+        this.domOperation()
     }
 
     window.onload = function () {
