@@ -185,7 +185,7 @@
                     break
             }
 
-            if (ARPhoto.getUrlParam('id') !== '1' && ARPhoto.getUrlParam('id') !== '5' && ARPhoto.getUrlParam('id') !== '6') {
+            if (ARPhoto.getUrlParam('id') !== '1' && ARPhoto.getUrlParam('id') !== '5' && ARPhoto.getUrlParam('id') !== '6' && ARPhoto.getUrlParam('id') !== '11' && ARPhoto.getUrlParam('id') !== '12') {
                 scale = window.innerWidth / imgBounds.width
                 realW = imgBounds.width * scale
                 realH = imgBounds.height * scale
@@ -244,7 +244,7 @@
 
     // init
     ARPhoto.init = function () {
-        var _this = this
+        // var _this = this
         this.enumerateDevices()
         // var timer = setInterval(function () {
         //     if (oVideo.readyState === oVideo.HAVE_ENOUGH_DATA && oVideo.videoWidth > 0) {
