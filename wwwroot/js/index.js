@@ -7,7 +7,8 @@
         oTrace = document.getElementById('trace'),
         traceCtx = document.getElementById('trace').getContext('2d'),
         traceStage = new createjs.Stage('trace'),
-        isPause = false
+        isPause = false,
+        scaleRate = 1
 
     ARPhoto.roleInfo = {}
 
@@ -44,7 +45,9 @@
 
     // dom operation
     ARPhoto.domOperation = function () {
-        var oBtnShuffer = document.getElementById('btnShutter'),
+        var oTraceBtns = document.getElementById('traceBtns'),
+            oResultBtns = document.getElementById('resultBtns'),
+            oBtnShuffer = document.getElementById('btnShutter'),
             oBtnRedo = document.getElementById('btnRedo'),
             oBtnShareFB = document.getElementById('btnShareFB')
 
@@ -162,11 +165,54 @@
 
         _img.onload = function () {
             var img = new createjs.Bitmap(_img.src),
-                imgBounds = img.getBounds()
+                imgBounds = img.getBounds(),
+                scaleRate = 0.7,
+                scale = 1,
+                realW = 0,
+                realH = 0,
+                gapW = (oVideo.videoWidth - window.innerWidth) / 2,
+                gapH = (oVideo.videoHeight - window.innerHeight) / 2,
+                randomL = 0,
+                randomT = 0
 
             _this.roleInfo.role = img
             _this.roleInfo.initW = imgBounds.width
             _this.roleInfo.initH = imgBounds.height
+
+            switch (ARPhoto.getUrlParam('id')) {
+                case '6':
+                    scaleRate = 0.6
+                    break
+            }
+
+            if (ARPhoto.getUrlParam('id') !== '1' && ARPhoto.getUrlParam('id') !== '5' && ARPhoto.getUrlParam('id') !== '6') {
+                scale = window.innerWidth / imgBounds.width
+                realW = imgBounds.width * scale
+                realH = imgBounds.height * scale
+                img.set({
+                    x: (oVideo.videoWidth - realW) / 2,
+                    y: (oVideo.videoHeight - realH) / 2,
+                    scaleX: scale,
+                    scaleY: scale
+                })
+            } else {
+                scale = window.innerWidth / imgBounds.width * scaleRate
+                if (imgBounds.height * scale > window.innerHeight) {
+                    scale = window.innerHeight / imgBounds.height * scaleRate
+                }
+                realW = imgBounds.width * scale
+                realH = imgBounds.height * scale
+                randomL = Math.random() * (oVideo.videoWidth - gapW * 2 - realW) + gapW
+                randomT = Math.random() * (oVideo.videoHeight - gapH * 2 - realH) + gapH
+
+                img.set({
+                    x: randomL,
+                    y: randomT,
+                    scaleX: scale,
+                    scaleY: scale
+                })
+            }
+
             traceStage.addChild(img)
             traceStage.addChildAt(img, 1)
             _this.draw()
@@ -175,19 +221,7 @@
 
     // canvas drawing loop
     ARPhoto.draw = function () {
-        var scale = window.innerWidth / this.roleInfo.initW,
-            roleRealW = window.innerWidth,
-            roleRealH = this.roleInfo.initH * scale,
-            roleL = (oVideo.videoWidth - window.innerWidth) / 2,
-            roleT = 0
-
         var loop = this.requestAnimationFrame(ARPhoto.draw.bind(this))
-        this.roleInfo.role.set({
-            x: roleL,
-            y: roleT,
-            scaleX: scale,
-            scaleY: scale
-        })
 
         if (isPause) {
             var img = new createjs.Bitmap(oVideo)
@@ -210,7 +244,7 @@
 
     // init
     ARPhoto.init = function () {
-        // var _this = this
+        var _this = this
         this.enumerateDevices()
         // var timer = setInterval(function () {
         //     if (oVideo.readyState === oVideo.HAVE_ENOUGH_DATA && oVideo.videoWidth > 0) {
