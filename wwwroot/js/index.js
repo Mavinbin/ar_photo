@@ -9,10 +9,11 @@
         traceStage = new createjs.Stage('trace'),
         oTraceBtns = document.getElementById('traceBtns'),
         oBtnShuffer = document.getElementById('btnShutter'),
+        asset = null,
         isPause = false,
         scaleRate = 1
 
-        createjs.Touch.enable(traceStage)
+    createjs.Touch.enable(traceStage)
 
     ARPhoto.requestAnimationFrame = function (callback, element) {
         var requestAnimationFrame =
@@ -166,10 +167,19 @@
         _img.onload = function () {
             var img = new createjs.Bitmap(_img.src),
                 imgBounds = img.getBounds(),
-                realW = (window.innerWidth - oBtnShuffer.clientWidth) / 2 - 15,
-                scale = realW / imgBounds.width,
-                realH = imgBounds.height * scale
+                realW = 0,
+                scale = 1,
+                realH = 0
 
+            if (!imgBounds) {
+                img.setBounds(0, 0, _img.naturalWidth, _img.naturalHeight)
+                imgBounds = img.getBounds()
+            }
+
+            realW = (window.innerWidth - oBtnShuffer.clientWidth) / 2 - 15,
+            scale = realW / imgBounds.width,
+            realH = imgBounds.height * scale
+            asset = img
             traceStage.addChild(img)
             traceStage.addChildAt(img, 2)
 
@@ -202,6 +212,11 @@
                 type = _this.assets[id].type,
                 scaleRate = _this.assets[id].scaleRate
 
+            if (!imgBounds) {
+                img.setBounds(0, 0, _img.naturalWidth, _img.naturalHeight)
+                imgBounds = img.getBounds()
+            }
+
             scale = window.innerWidth / imgBounds.width * scaleRate
 
             if (imgBounds.height * scale > window.innerHeight) {
@@ -226,7 +241,7 @@
                     posY = (oVideo.videoHeight - realH) / 2
 
                     if (xRate !== undefined && typeof xRate === 'number') {
-                        posX = xRate >= 0 ? oVideo.videoWidth - realW * xRate - gapW :  realW * xRate + gapW
+                        posX = xRate >= 0 ? oVideo.videoWidth - realW * xRate - gapW : realW * xRate + gapW
                     }
 
                     if (yRate !== undefined && typeof yRate === 'number') {
@@ -284,25 +299,79 @@
 
     // share
     ARPhoto.share = function () {
-        var URI = oTrace.toDataURL("image/jpeg");
-        console.log(URI)
+        var URI = oTrace.toDataURL("image/octet-stream");
+        var type = 'png'
+
+        var _fixType = function(type) {
+            type = type.toLowerCase().replace(/jpg/i, 'jpeg');
+            var r = type.match(/png|jpeg|bmp|gif/)[0];
+            return 'image/' + r;
+        }
+
+        URI = URI.replace(_fixType(type), 'image/octet-stream')
+
+        var saveFile = function(data, filename){
+            var save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+            save_link.href = data;
+            save_link.download = filename;
+
+            var event = document.createEvent('MouseEvents');
+            event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+            save_link.dispatchEvent(event);
+        };
+
+        var filename = '火影猴_' + (new Date()).getTime() + '.' + type;
+
+        saveFile(URI,filename);
     }
 
     ARPhoto.finger = function (el) {
+        var x = el.x,
+            y = el.y,
+            scale = el.scaleX,
+            newScale = 1,
+            touches = null,
+            prevFingerDistance = 0,
+            fingerDistance = 0
+
         el.addEventListener('mousedown', function (e) {
-            // var ne = e.nativeEvent
+            if (isPause) {
+                return
+            }
             var gapX = e.stageX - el.x,
                 gapY = e.stageY - el.y
 
-                el.addEventListener('pressmove', function (e) {
-                    var x = e.stageX - gapX,
-                        y = e.stageY - gapY
+            el.addEventListener('pressmove', function (e) {
+                if (isPause) {
+                    return
+                }
 
-                    el.set({
-                        x: x,
-                        y: y
-                    })
+                touches = e.nativeEvent.touches
+
+                if (!touches[1]) {
+                    x = e.stageX - gapX
+                    y = e.stageY - gapY
+                } else {
+                    fingerDistance = Math.pow(Math.pow(touches[1].pageX - touches[0].pageX, 2) + Math.pow(touches[1].pageY - touches[0].pageY, 2), 0.5)
+
+
+                    if (prevFingerDistance) {
+                        newScale = fingerDistance / prevFingerDistance
+                        x = el.x - el.getBounds().width * scale * (newScale - 1) / 2
+                        y = el.y - el.getBounds().width * scale * (newScale - 1) / 2
+                        scale *= newScale
+                    }
+
+                    prevFingerDistance = fingerDistance
+                }
+
+                el.set({
+                    x: x,
+                    y: y,
+                    scaleX: scale,
+                    scaleY: scale
                 })
+            })
         })
     }
 
