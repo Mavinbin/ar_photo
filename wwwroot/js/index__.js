@@ -7,12 +7,10 @@
         oTrace = document.getElementById('trace'),
         traceCtx = document.getElementById('trace').getContext('2d'),
         traceStage = new createjs.Stage('trace'),
-        oTraceBtns = document.getElementById('traceBtns'),
-        oBtnShuffer = document.getElementById('btnShutter'),
         isPause = false,
         scaleRate = 1
 
-        createjs.Touch.enable(traceStage)
+    ARPhoto.roleInfo = {}
 
     ARPhoto.requestAnimationFrame = function (callback, element) {
         var requestAnimationFrame =
@@ -47,7 +45,9 @@
 
     // dom operation
     ARPhoto.domOperation = function () {
-        var oResultBtns = document.getElementById('resultBtns'),
+        var oTraceBtns = document.getElementById('traceBtns'),
+            oResultBtns = document.getElementById('resultBtns'),
+            oBtnShuffer = document.getElementById('btnShutter'),
             oBtnRedo = document.getElementById('btnRedo'),
             oBtnShareFB = document.getElementById('btnShareFB')
 
@@ -131,7 +131,7 @@
                 var timer = setInterval(function () {
                     if (oVideo.videoWidth) {
                         _this.initCanvas(oVideo.videoWidth, oVideo.videoHeight)
-                        _this.initAssets(_this.getUrlParam('id'))
+                        _this.initAssets()
                         clearInterval(timer)
                     }
                 }, 20)
@@ -156,116 +156,73 @@
         oTrace.setAttribute('height', h)
     }
 
-    // logo
-    ARPhoto.initLogo = function () {
-        var _this = this
-        var _img = new Image()
-
-        _img.src = 'img/logo.png'
-
-        _img.onload = function () {
-            var img = new createjs.Bitmap(_img.src),
-                imgBounds = img.getBounds(),
-                realW = (window.innerWidth - oBtnShuffer.clientWidth) / 2 - 15,
-                scale = realW / imgBounds.width,
-                realH = imgBounds.height * scale
-
-            traceStage.addChild(img)
-            traceStage.addChildAt(img, 2)
-
-            img.set({
-                x: oVideo.videoWidth - (oVideo.videoWidth - window.innerWidth) / 2 - realW - 10,
-                y: oVideo.videoHeight - (oVideo.videoHeight - window.innerHeight) / 2 - realH - 10,
-                scaleX: scale,
-                scaleY: scale
-            })
-        }
-    }
-
     // add role image and init
-    ARPhoto.initAssets = function (id) {
+    ARPhoto.initAssets = function () {
         var _this = this
         var _img = new Image()
 
-        _img.src = 'img/asset_' + id + '.png'
+        _img.src = 'img/role_' + this.getUrlParam('id') + '.png'
 
         _img.onload = function () {
             var img = new createjs.Bitmap(_img.src),
                 imgBounds = img.getBounds(),
-                scale = 1,
-                realW = 0,
-                realH = 0,
-                posX = 0,
-                posY = 0,
-                gapW = (oVideo.videoWidth - window.innerWidth) / 2,
-                gapH = (oVideo.videoHeight - window.innerHeight) / 2,
-                type = _this.assets[id].type,
-                scaleRate = _this.assets[id].scaleRate
+                scaleRate = 0.7
 
-            scale = window.innerWidth / imgBounds.width * scaleRate
+            _this.roleInfo.role = img
+            _this.roleInfo.initW = imgBounds.width
+            _this.roleInfo.initH = imgBounds.height
 
-            if (imgBounds.height * scale > window.innerHeight) {
-                scale = window.innerHeight / imgBounds.height * scaleRate
-            }
-            realW = imgBounds.width * scale
-            realH = imgBounds.height * scale
-
-            switch (type) {
-                case 'pet':
-                    posX = (oVideo.videoWidth - realW) / 2
-                    posY = oVideo.videoHeight - realH - oTraceBtns.clientHeight - gapH * 2
-                    break
-
-                case 'role':
-                    var xRate = _this.assets[id].xRate,
-                        yRate = _this.assets[id].yRate,
-                        x = _this.assets[id].x,
-                        y = _this.assets[id].y
-
-                    posX = (oVideo.videoWidth - realW) / 2
-                    posY = (oVideo.videoHeight - realH) / 2
-
-                    if (xRate !== undefined && typeof xRate === 'number') {
-                        posX = xRate >= 0 ? oVideo.videoWidth - realW * xRate - gapW :  realW * xRate + gapW
-                    }
-
-                    if (yRate !== undefined && typeof yRate === 'number') {
-                        posY = yRate >= 0 ? oVideo.videoHeight - realH * yRate - gapH : realH * yRate + gapH
-                    }
-
-                    if (x !== undefined && typeof x === 'number') {
-                        posX = x
-                    }
-
-                    if (y !== undefined && typeof y === 'number') {
-                        posY = y
-                    }
-                    break
-                case 'weapon':
-                    posX = (oVideo.videoWidth - realW) / 2
-                    posY = (oVideo.videoHeight - realH) / 2
+            switch (ARPhoto.getUrlParam('id')) {
+                case '6':
+                    scaleRate = 0.18
                     break
             }
-
-            img.set({
-                x: posX,
-                y: posY,
-                scaleX: scale,
-                scaleY: scale
-            })
 
             traceStage.addChild(img)
             traceStage.addChildAt(img, 1)
-
-            ARPhoto.finger(img)
-
-            _this.initLogo()
-            _this.draw()
+            _this.draw(scaleRate)
         }
     }
 
     // canvas drawing loop
-    ARPhoto.draw = function () {
+    ARPhoto.draw = function (scaleRate) {
+        var loop = this.requestAnimationFrame(ARPhoto.draw.bind(this, scaleRate)),
+            scale = window.innerWidth / this.roleInfo.initW * scaleRate,
+            realW = 0,
+            realH = 0,
+            gapW = (oVideo.videoWidth - window.innerWidth) / 2,
+            gapH = (oVideo.videoHeight - window.innerHeight) / 2,
+            randomL = 0,
+            randomT = 0
+
+        if (this.roleInfo.initH * scale > window.innerHeight) {
+            scale = window.innerHeight / this.roleInfo.initH * scaleRate
+        }
+
+        if (ARPhoto.getUrlParam('id') !== '1' && ARPhoto.getUrlParam('id') !== '5' && ARPhoto.getUrlParam('id') !== '6') {
+            scale = window.innerWidth / this.roleInfo.initW
+            realW = this.roleInfo.initW * scale
+            realH = this.roleInfo.initH * scale
+            this.roleInfo.role.set({
+                x: (oVideo.videoWidth - realW) / 2,
+                y: (oVideo.videoHeight - realH) / 2,
+                scaleX: scale,
+                scaleY: scale
+            })
+        } else {
+            realW = this.roleInfo.initW * scale
+            realH = this.roleInfo.initH * scale
+            randomL = Math.random() * (oVideo.videoWidth - gapW * 2 - realW) + gapW
+            randomT = Math.random() * (oVideo.videoHeight - gapH * 2 - realH) + gapH
+
+            this.roleInfo.role.set({
+                x: randomL,
+                y: randomT,
+                scaleX: scale,
+                scaleY: scale
+            })
+        }
+
         if (isPause) {
             var img = new createjs.Bitmap(oVideo)
             img.set({
@@ -274,9 +231,7 @@
             })
             traceStage.addChild(img)
             traceStage.addChildAt(img, 0)
-            // cancelAnimationFrame(loop)
-        } else {
-            this.requestAnimationFrame(ARPhoto.draw.bind(this))
+            cancelAnimationFrame(loop)
         }
 
         traceStage.update()
@@ -285,75 +240,20 @@
     // share
     ARPhoto.share = function () {
         var URI = oTrace.toDataURL("image/jpeg");
-        console.log(URI)
-    }
-
-    ARPhoto.finger = function (el) {
-        el.addEventListener('mousedown', function (e) {
-            // var ne = e.nativeEvent
-            var gapX = e.stageX - el.x,
-                gapY = e.stageY - el.y
-
-                el.addEventListener('pressmove', function (e) {
-                    var x = e.stageX - gapX,
-                        y = e.stageY - gapY
-
-                    el.set({
-                        x: x,
-                        y: y
-                    })
-                })
-        })
     }
 
     // init
     ARPhoto.init = function () {
         var _this = this
-        this.enumerateDevices()
-        // var timer = setInterval(function () {
-        //     if (oVideo.readyState === oVideo.HAVE_ENOUGH_DATA && oVideo.videoWidth > 0) {
-        //         _this.initCanvas(oVideo.videoWidth, oVideo.videoHeight)
-        //         _this.initAssets(_this.getUrlParam('id'))
-        //         clearInterval(timer)
-        //     }
-        // }, 20)
+        // this.enumerateDevices()
+        var timer = setInterval(function () {
+            if (oVideo.readyState === oVideo.HAVE_ENOUGH_DATA && oVideo.videoWidth > 0) {
+                _this.initCanvas(oVideo.videoWidth, oVideo.videoHeight)
+                _this.initAssets()
+                clearInterval(timer)
+            }
+        }, 20)
         this.domOperation()
-    }
-
-    // 素材信息
-    ARPhoto.assets = {
-        1: {
-            type: 'pet',
-            scaleRate: 0.3
-        },
-        2: {
-            type: 'pet',
-            scaleRate: 0.6
-        },
-        3: {
-            type: 'pet',
-            scaleRate: 0.6
-        },
-        4: {
-            type: 'role',
-            scaleRate: 2,
-            xRate: 1,
-            yRate: 0.74
-        },
-        5: {
-            type: 'role',
-            scaleRate: 0.7,
-            yRate: -0.3
-        },
-        6: {
-            type: 'role',
-            scaleRate: 0.9,
-            y: window.innerHeight * 0.2
-        },
-        7: {
-            type: 'weapon',
-            scaleRate: 0.9
-        }
     }
 
     window.onload = function () {
