@@ -300,29 +300,30 @@
     // share
     ARPhoto.share = function () {
         var URI = oTrace.toDataURL("image/octet-stream");
-        var type = 'png'
+        window.location.href = URI
+        // var type = 'png'
 
-        var _fixType = function(type) {
-            type = type.toLowerCase().replace(/jpg/i, 'jpeg');
-            var r = type.match(/png|jpeg|bmp|gif/)[0];
-            return 'image/' + r;
-        }
+        // var _fixType = function(type) {
+        //     type = type.toLowerCase().replace(/jpg/i, 'jpeg');
+        //     var r = type.match(/png|jpeg|bmp|gif/)[0];
+        //     return 'image/' + r;
+        // }
 
-        URI = URI.replace(_fixType(type), 'image/octet-stream')
+        // URI = URI.replace(_fixType(type), 'image/octet-stream')
 
-        var saveFile = function(data, filename){
-            var save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
-            save_link.href = data;
-            save_link.download = filename;
+        // var saveFile = function(data, filename){
+        //     var save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+        //     save_link.href = data;
+        //     save_link.download = filename;
 
-            var event = document.createEvent('MouseEvents');
-            event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-            save_link.dispatchEvent(event);
-        };
+        //     var event = document.createEvent('MouseEvents');
+        //     event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+        //     save_link.dispatchEvent(event);
+        // };
 
-        var filename = '火影猴_' + (new Date()).getTime() + '.' + type;
+        // var filename = '火影猴_' + (new Date()).getTime() + '.' + type;
 
-        saveFile(URI,filename);
+        // saveFile(URI,filename);
     }
 
     ARPhoto.finger = function (el) {
