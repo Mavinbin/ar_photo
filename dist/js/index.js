@@ -153,6 +153,8 @@
                     if (oVideo.videoWidth) {
                         _this.initCanvas(oVideo.videoWidth, oVideo.videoHeight)
                         _this.initAssets(_this.getUrlParam('id'))
+                        _this.domOperation()
+                        oTips.classList.add('show')
                         clearInterval(timer)
                     }
                 }, 20)
