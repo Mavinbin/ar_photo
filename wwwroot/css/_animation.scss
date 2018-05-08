@@ -1,0 +1,5 @@
+@include keyframes(fadeOut) {
+    100% {
+        z-index: -1;
+    }
+}

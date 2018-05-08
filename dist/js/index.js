@@ -9,12 +9,18 @@
         traceStage = new createjs.Stage('trace'),
         oTraceBtns = document.getElementById('traceBtns'),
         oBtnShuffer = document.getElementById('btnShutter'),
+        oTips = document.getElementById('tips'),
         asset = null,
         isPause = false,
         scaleRate = 1
 
     createjs.Touch.enable(traceStage)
 
+    /**
+      *  动画帧优化函数兼容处理
+      *  @param {Function} callback [回调函数，重复执行的函数]
+      *
+      */
     ARPhoto.requestAnimationFrame = function (callback, element) {
         var requestAnimationFrame =
             window.requestAnimationFrame ||
@@ -34,7 +40,11 @@
         return requestAnimationFrame.call(window, callback, element);
     }
 
-    // get the param from URL
+    /**
+      *  模板渲染组件
+      *  @param {String} name [参数名称]
+      *
+      */
     ARPhoto.getUrlParam = function (name) {
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"),
             r = window.location.search.substr(1).match(reg)
@@ -46,13 +56,15 @@
         }
     }
 
-    // dom operation
+    /**
+      *  dom操作处理
+      */
     ARPhoto.domOperation = function () {
         var oResultBtns = document.getElementById('resultBtns'),
             oBtnRedo = document.getElementById('btnRedo'),
             oBtnShareFB = document.getElementById('btnShareFB')
 
-        // click to take a photo
+        // 点击拍照按钮
         oBtnShuffer.addEventListener('click', function () {
             isPause = true
             oVideo.pause()
@@ -60,7 +72,7 @@
             oResultBtns.classList.add('active')
         })
 
-        // click to redo taking a photo
+        // 点击返回重拍
         oBtnRedo.addEventListener('click', function () {
             isPause = false
             oVideo.play()
@@ -69,13 +81,15 @@
             oTraceBtns.classList.add('active')
         })
 
-        // click to share to facebook
+        // 点击分享FB
         oBtnShareFB.addEventListener('click', function () {
             ARPhoto.share()
         })
     }
 
-    // detect mobile system
+    /**
+      *  检测手机系统
+      */
     ARPhoto.getSystem = function () {
         var u = navigator.userAgent
         var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1
@@ -88,7 +102,9 @@
         }
     }
 
-    // query all audio and video devices
+    /**
+      *  查询所有音视频设备
+      */
     ARPhoto.enumerateDevices = function () {
         var _this = this
         var constraints = {
@@ -120,7 +136,11 @@
         }
     }
 
-    // request to open the camera
+    /**
+      *  请求打开手机设备（摄像头）
+      *  @param {Object} constraints [调用的设备相关配置]
+      *
+      */
     ARPhoto.getUserMedia = function (constraints) {
         var _this = this
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -137,9 +157,8 @@
                     }
                 }, 20)
             }).catch(function (err) {
-                console.log(err)
                 if (err.name === 'DevicesNotFoundError') {
-                    // alert('找不到摄像头！')
+                    alert('no camera！')
                 } else {
                     alert(err)
                 }
@@ -149,7 +168,10 @@
         }
     }
 
-    // adjust canvas width and height to match with video
+    /**
+      *  调整canvas的宽高和视频的宽高相同
+      *
+      */
     ARPhoto.initCanvas = function (w, h) {
         oVideo.setAttribute('width', w)
         oVideo.setAttribute('height', h)
@@ -157,7 +179,9 @@
         oTrace.setAttribute('height', h)
     }
 
-    // logo
+    /**
+      *  初始化Logo图片
+      */
     ARPhoto.initLogo = function () {
         var _this = this
         var _img = new Image()
@@ -192,7 +216,9 @@
         }
     }
 
-    // add role image and init
+    /**
+      *  添加角色（或配件）资源并初始化
+      */
     ARPhoto.initAssets = function (id) {
         var _this = this
         var _img = new Image()
@@ -279,7 +305,9 @@
         }
     }
 
-    // canvas drawing loop
+    /**
+      *  绘制canvas循环函数
+      */
     ARPhoto.draw = function () {
         if (isPause) {
             var img = new createjs.Bitmap(oVideo)
@@ -289,7 +317,6 @@
             })
             traceStage.addChild(img)
             traceStage.addChildAt(img, 0)
-            // cancelAnimationFrame(loop)
         } else {
             this.requestAnimationFrame(ARPhoto.draw.bind(this))
         }
@@ -297,35 +324,19 @@
         traceStage.update()
     }
 
-    // share
+    /**
+      *  点击分享按钮后的回调处理
+      */
     ARPhoto.share = function () {
         var URI = oTrace.toDataURL("image/octet-stream");
-        window.location.href = URI
-        // var type = 'png'
-
-        // var _fixType = function(type) {
-        //     type = type.toLowerCase().replace(/jpg/i, 'jpeg');
-        //     var r = type.match(/png|jpeg|bmp|gif/)[0];
-        //     return 'image/' + r;
-        // }
-
-        // URI = URI.replace(_fixType(type), 'image/octet-stream')
-
-        // var saveFile = function(data, filename){
-        //     var save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
-        //     save_link.href = data;
-        //     save_link.download = filename;
-
-        //     var event = document.createEvent('MouseEvents');
-        //     event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-        //     save_link.dispatchEvent(event);
-        // };
-
-        // var filename = '火影猴_' + (new Date()).getTime() + '.' + type;
-
-        // saveFile(URI,filename);
+        return URI;
     }
 
+    /**
+      *  手势模拟（拖拽+放大缩小）
+      *  @param {Object} el [createjs的stage子元素-BitMap实例对象]
+      *
+      */
     ARPhoto.finger = function (el) {
         var x = el.x,
             y = el.y,
@@ -376,7 +387,9 @@
         })
     }
 
-    // init
+    /**
+      *  应用初始化
+      */
     ARPhoto.init = function () {
         var _this = this
         this.enumerateDevices()
@@ -384,13 +397,22 @@
         //     if (oVideo.readyState === oVideo.HAVE_ENOUGH_DATA && oVideo.videoWidth > 0) {
         //         _this.initCanvas(oVideo.videoWidth, oVideo.videoHeight)
         //         _this.initAssets(_this.getUrlParam('id'))
+        //         _this.domOperation()
+        //         oTips.classList.add('show')
         //         clearInterval(timer)
         //     }
         // }, 20)
-        this.domOperation()
     }
 
-    // 素材信息
+    /**
+      *  资源素材设置
+      *  {String} type [素材类型]
+      *  {Number} scaleRate [素材缩放率]
+      *  {Number} xRate [素材左偏移率]
+      *  {Number} yRate [素材右偏移率]
+      *  {Number} x [素材左偏移值]
+      *  {Number} y [素材右偏移值]
+      */
     ARPhoto.assets = {
         1: {
             type: 'pet',
