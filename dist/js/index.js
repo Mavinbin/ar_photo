@@ -10,6 +10,7 @@
         oTraceBtns = document.getElementById('traceBtns'),
         oBtnShuffer = document.getElementById('btnShutter'),
         oTips = document.getElementById('tips'),
+        oLoading = document.getElementById('loading'),
         asset = null,
         isPause = false,
         scaleRate = 1
@@ -85,21 +86,55 @@
         oBtnShareFB.addEventListener('click', function () {
             ARPhoto.share()
         })
+
+        // 点击提示层时，关闭提示层
+        oTips.addEventListener('click', function () {
+            oTips.style.zIndex = -1
+        })
     }
 
     /**
       *  检测手机系统
       */
     ARPhoto.getSystem = function () {
-        var u = navigator.userAgent
-        var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1
-        var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+        var u = navigator.userAgent,
+            isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1,
+            isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/),
+            isFireFox = u.indexOf('Firefox') > -1,
+            isChrome = u.indexOf('Chrome') > -1,
+            isSafari = u.indexOf('Safari') > -1,
+            result = {}
 
         if (isAndroid) {
-            return 'Android'
+            result.system = 'Android'
+            u.match(/Android\s((\d+.?)+);/i)
+            result.systemVersion = RegExp.$1
         } else {
-            return 'iOS'
+            result.system = 'iOS'
+            u.match(/Version\/((\d+.?)+)/i)
+            result.systemVersion = RegExp.$1
         }
+
+        if (isFireFox) {
+            result.browser = 'Firefox'
+            u.match(/Firefox\/((\d+.?)+)/i)
+            result.browserVersion = RegExp.$1
+        }
+
+        if (isSafari) {
+            result.browser = 'Safari'
+            u.match(/Safari\/((\d+.?)+)/i)
+            result.browserVersion = RegExp.$1
+        }
+
+        if (isChrome) {
+            result.browser = 'Chrome'
+            u.match(/Chrome\/((\d+.?)+)/i)
+            result.browserVersion = RegExp.$1
+        }
+
+        // alert('system:' + result.system + '\nsystemVersion:' + result.systemVersion + '\nbrowser:' + result.browser + '\nbrowserVersion:' + result.browserVersion)
+        return result
     }
 
     /**
@@ -107,6 +142,7 @@
       */
     ARPhoto.enumerateDevices = function () {
         var _this = this
+        var systemInfo = _this.getSystem()
         var constraints = {
                 audio: false,
                 video: {}
@@ -121,8 +157,12 @@
                     }
                 })
 
-                if (_this.getSystem() === 'Android') {
+                if (systemInfo.system === 'Android') {
                     constraints.video.deviceId = videoDevices[0]
+
+                    if (systemInfo.browser === 'Firefox') {
+                        constraints.video.facingMode = 'user'
+                    }
                 } else {
                     constraints.video.deviceId = videoDevices[videoDevices.length - 1]
                 }
@@ -225,6 +265,8 @@
         var _this = this
         var _img = new Image()
 
+        oLoading.classList.add('show')
+
         _img.src = 'img/asset_' + id + '.png'
 
         _img.onload = function () {
@@ -239,6 +281,8 @@
                 gapH = (oVideo.videoHeight - window.innerHeight) / 2,
                 type = _this.assets[id].type,
                 scaleRate = _this.assets[id].scaleRate
+
+            oLoading.classList.remove('show')
 
             if (!imgBounds) {
                 img.setBounds(0, 0, _img.naturalWidth, _img.naturalHeight)
@@ -394,16 +438,16 @@
       */
     ARPhoto.init = function () {
         var _this = this
-        this.enumerateDevices()
-        // var timer = setInterval(function () {
-        //     if (oVideo.readyState === oVideo.HAVE_ENOUGH_DATA && oVideo.videoWidth > 0) {
-        //         _this.initCanvas(oVideo.videoWidth, oVideo.videoHeight)
-        //         _this.initAssets(_this.getUrlParam('id'))
-        //         _this.domOperation()
-        //         oTips.classList.add('show')
-        //         clearInterval(timer)
-        //     }
-        // }, 20)
+        // this.enumerateDevices()
+        var timer = setInterval(function () {
+            if (oVideo.readyState === oVideo.HAVE_ENOUGH_DATA && oVideo.videoWidth > 0) {
+                _this.initCanvas(oVideo.videoWidth, oVideo.videoHeight)
+                _this.initAssets(_this.getUrlParam('id'))
+                _this.domOperation()
+                oTips.classList.add('show')
+                clearInterval(timer)
+            }
+        }, 20)
     }
 
     /**
