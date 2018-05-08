@@ -438,16 +438,16 @@
       */
     ARPhoto.init = function () {
         var _this = this
-        // this.enumerateDevices()
-        var timer = setInterval(function () {
-            if (oVideo.readyState === oVideo.HAVE_ENOUGH_DATA && oVideo.videoWidth > 0) {
-                _this.initCanvas(oVideo.videoWidth, oVideo.videoHeight)
-                _this.initAssets(_this.getUrlParam('id'))
-                _this.domOperation()
-                oTips.classList.add('show')
-                clearInterval(timer)
-            }
-        }, 20)
+        this.enumerateDevices()
+        // var timer = setInterval(function () {
+        //     if (oVideo.readyState === oVideo.HAVE_ENOUGH_DATA && oVideo.videoWidth > 0) {
+        //         _this.initCanvas(oVideo.videoWidth, oVideo.videoHeight)
+        //         _this.initAssets(_this.getUrlParam('id'))
+        //         _this.domOperation()
+        //         oTips.classList.add('show')
+        //         clearInterval(timer)
+        //     }
+        // }, 20)
     }
 
     /**
