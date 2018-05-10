@@ -172,7 +172,16 @@
                 alert(err)
             })
         } else {
-            alert('Oops :( this browser does not support camera calls')
+            if (systemInfo.system === 'iOS') {
+                if (parseInt(systemInfo.systemVersion) < 11) {
+                    alert('Opps! Open camera error! Please update your system to iOS 11 and open this page in Safari.')
+                } else if(systemInfo.browser !== 'Safari'){
+                    alert('Opps! Open camera error! Please open this page in Safari.')
+                }
+            } else {
+                alert('Opps! Open camera error!')
+            }
+
         }
     }
 
@@ -206,7 +215,15 @@
                 }
             })
         } else {
-            alert('Oops :( this browser does not support camera calls')
+            if (systemInfo.system === 'iOS') {
+                if (parseInt(systemInfo.systemVersion) < 11) {
+                    alert('Opps! Open camera error! Please update your system to iOS 11 and open this page in Safari.')
+                } else if(systemInfo.browser !== 'Safari'){
+                    alert('Opps! Open camera error! Please open this page in Safari.')
+                }
+            } else {
+                alert('Opps! Open camera error!')
+            }
         }
     }
 

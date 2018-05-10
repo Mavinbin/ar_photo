@@ -132,7 +132,7 @@
     }
 
     &.show {
-        z-index: 1;
+        z-index: 0;
         span {
             @include animation(flash 1.8s infinite);
         }
@@ -161,7 +161,7 @@
 
     &.show {
         opacity: 1;
-        @include animation(fadeOut 2s linear forwards);
+        // @include animation(fadeOut 2s linear forwards);
     }
 
     .tips-main {
