@@ -406,7 +406,9 @@
             newScale = 1,
             touches = null,
             prevFingerDistance = 0,
-            fingerDistance = 0
+            fingerDistance = 0,
+            timer = null,
+            canMove = true
 
         el.addEventListener('mousedown', function (e) {
             if (isPause && prevFingerDistance !== 0) {
@@ -417,7 +419,7 @@
                 gapY = e.stageY - el.y
 
             el.addEventListener('pressmove', function (e) {
-                if (isPause) {
+                if (isPause || !e.nativeEvent.touches) {
                     return
                 }
 
@@ -426,7 +428,18 @@
                 if (!touches[1]) {
                     x = e.stageX - gapX
                     y = e.stageY - gapY
+
+                    if (canMove) {
+                        el.set({
+                            x: x,
+                            y: y,
+                            scaleX: scale,
+                            scaleY: scale
+                        })
+                    }
                 } else {
+                    clearTimeout(timer)
+                    canMove = false
                     fingerDistance = Math.pow(Math.pow(touches[1].pageX - touches[0].pageX, 2) + Math.pow(touches[1].pageY - touches[0].pageY, 2), 0.5)
 
                     if (prevFingerDistance) {
@@ -437,14 +450,20 @@
                     }
 
                     prevFingerDistance = fingerDistance
+
+                    el.set({
+                        x: x,
+                        y: y,
+                        scaleX: scale,
+                        scaleY: scale
+                    })
+
+                    timer = setTimeout(function () {
+                        canMove = true
+                    }, 500);
                 }
 
-                el.set({
-                    x: x,
-                    y: y,
-                    scaleX: scale,
-                    scaleY: scale
-                })
+
             })
         })
     }
