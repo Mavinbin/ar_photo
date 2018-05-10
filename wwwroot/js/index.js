@@ -68,7 +68,7 @@
         // 点击拍照按钮
         oBtnShuffer.addEventListener('click', function () {
             isPause = true
-            oVideo.pause()
+            // oVideo.pause()
             oTraceBtns.classList.remove('active')
             oResultBtns.classList.add('active')
         })
@@ -76,7 +76,7 @@
         // 点击返回重拍
         oBtnRedo.addEventListener('click', function () {
             isPause = false
-            oVideo.play()
+            // oVideo.play()
             ARPhoto.draw()
             oResultBtns.classList.remove('active')
             oTraceBtns.classList.add('active')
@@ -133,7 +133,6 @@
             result.browserVersion = RegExp.$1
         }
 
-        // alert('system:' + result.system + '\nsystemVersion:' + result.systemVersion + '\nbrowser:' + result.browser + '\nbrowserVersion:' + result.browserVersion)
         return result
     }
 
@@ -410,7 +409,8 @@
             fingerDistance = 0
 
         el.addEventListener('mousedown', function (e) {
-            if (isPause) {
+            if (isPause && prevFingerDistance !== 0) {
+                prevFingerDistance = 0
                 return
             }
             var gapX = e.stageX - el.x,
@@ -428,7 +428,6 @@
                     y = e.stageY - gapY
                 } else {
                     fingerDistance = Math.pow(Math.pow(touches[1].pageX - touches[0].pageX, 2) + Math.pow(touches[1].pageY - touches[0].pageY, 2), 0.5)
-
 
                     if (prevFingerDistance) {
                         newScale = fingerDistance / prevFingerDistance
@@ -504,10 +503,6 @@
             type: 'role',
             scaleRate: 0.9,
             y: window.innerHeight * 0.2
-        },
-        7: {
-            type: 'weapon',
-            scaleRate: 0.9
         }
     }
 
