@@ -157,10 +157,10 @@
                 })
 
                 if (systemInfo.system === 'Android') {
-                    constraints.video.deviceId = videoDevices[0]
-
                     if (systemInfo.browser === 'Firefox') {
                         constraints.video.facingMode = 'user'
+                    } else {
+                        constraints.video.deviceId = videoDevices[0]
                     }
                 } else {
                     constraints.video.deviceId = videoDevices[videoDevices.length - 1]
