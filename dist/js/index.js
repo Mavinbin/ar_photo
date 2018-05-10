@@ -68,7 +68,7 @@
         // 点击拍照按钮
         oBtnShuffer.addEventListener('click', function () {
             isPause = true
-            // oVideo.pause()
+            oVideo.pause()
             oTraceBtns.classList.remove('active')
             oResultBtns.classList.add('active')
         })
@@ -76,7 +76,7 @@
         // 点击返回重拍
         oBtnRedo.addEventListener('click', function () {
             isPause = false
-            // oVideo.play()
+            oVideo.play()
             ARPhoto.draw()
             oResultBtns.classList.remove('active')
             oTraceBtns.classList.add('active')
@@ -100,8 +100,8 @@
         var u = navigator.userAgent,
             isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1,
             isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/),
-            isFireFox = u.indexOf('Firefox') > -1,
-            isChrome = u.indexOf('Chrome') > -1,
+            isFireFox = u.indexOf('Firefox') > -1 || u.indexOf('FxiOS') > -1,
+            isChrome = u.indexOf('Chrome') > -1 || u.indexOf('CriOS') > -1,
             isSafari = u.indexOf('Safari') > -1,
             result = {}
 
@@ -111,14 +111,8 @@
             result.systemVersion = RegExp.$1
         } else {
             result.system = 'iOS'
-            u.match(/Version\/((\d+.?)+)/i)
+            u.match(/CPU\siPhone\sOS\s((\d+_?)+)/i)
             result.systemVersion = RegExp.$1
-        }
-
-        if (isFireFox) {
-            result.browser = 'Firefox'
-            u.match(/Firefox\/((\d+.?)+)/i)
-            result.browserVersion = RegExp.$1
         }
 
         if (isSafari) {
@@ -127,10 +121,16 @@
             result.browserVersion = RegExp.$1
         }
 
+        if (isFireFox) {
+            result.browser = 'Firefox'
+            u.match(/(Firefox|FxiOS)\/((\d+.?)+)/i)
+            result.browserVersion = RegExp.$2
+        }
+
         if (isChrome) {
             result.browser = 'Chrome'
-            u.match(/Chrome\/((\d+.?)+)/i)
-            result.browserVersion = RegExp.$1
+            u.match(/(Chrome|CriOS)\/((\d+.?)+)/i)
+            result.browserVersion = RegExp.$2
         }
 
         return result
@@ -371,6 +371,7 @@
       *  绘制canvas循环函数
       */
     ARPhoto.draw = function () {
+        var id;
         if (isPause) {
             var img = new createjs.Bitmap(oVideo)
             img.set({
@@ -379,8 +380,11 @@
             })
             traceStage.addChild(img)
             traceStage.addChildAt(img, 0)
+            if (this.cancelAnimationFrame) {
+                this.cancelAnimationFrame(id)
+            }
         } else {
-            this.requestAnimationFrame(ARPhoto.draw.bind(this))
+            id = this.requestAnimationFrame(ARPhoto.draw.bind(this))
         }
 
         traceStage.update()
